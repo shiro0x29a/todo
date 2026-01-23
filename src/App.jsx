@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   const [taskText, setTaskText] = useState('')
-  const [tasks, setTodo] = useState('')
+  const [tasks, setTodo] = useState([])
 
 // INIT
 useEffect(() => {
@@ -98,6 +98,15 @@ if (filter === 'all') {
     console.log(1, filter)
 }
 
+const filteredTasks = tasks.filter(task => {
+    if (filter === 'all') return true
+    if (filter === 'completed') return task.isCompleted
+    if (filter === 'uncompleted') return !task.isCompleted
+    return true
+  })
+
+console.log(filteredTasks)
+
   return (
     <>
     <form id="taskForm" noValidate>
@@ -116,9 +125,8 @@ if (filter === 'all') {
     </form>
 
     <div className="taskList">
-      {tasks.length ? (
-          tasks.map(task => {
-     if (filter === 'all' || (filter === 'completed' && task.isCompleted) || (filter === 'uncompleted' && !task.isCompleted)) { return (
+      {filteredTasks.length ? (
+          filteredTasks.map(task => (
     <div key={task.id} className={`task ${task.isCompleted ? 'completed' : null}`}>
   <div className="taskWrap">
   <input onClick={() => taskToggle(task.id)} type="checkbox" className="checkbox" checked={task.isCompleted ? true : false}/>
@@ -129,9 +137,8 @@ if (filter === 'all') {
   </div>
   </div>
   <div className="timeStamp">{task.edited ? 'Edited: '+task.edited : 'Created: '+task.created}</div>
-      </div> )}
-            return <div className="empty">There are no tasks</div>;
-          })
+      </div> )
+          )
       ) : (
           <div className="empty">There are no tasks</div>
       )}
