@@ -83,6 +83,40 @@
   color: #333;
 }
 
+#sortOptions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px; /* Расстояние между кнопками */
+  margin: 15px 0;
+  font-family: Arial, sans-serif;
+}
+
+#sortOptions span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+#sortOptions button {
+  padding: 6px 12px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+#sortOptions button:hover {
+  background-color: #e0e0e0;
+}
+
+#sortOptions button.active {
+  background-color: #4caf50; /* Цвет активной сортировки */
+  color: white;
+  border-color: #4caf50;
+}
+
 .taskList {
   display: grid;
   gap: 10px;

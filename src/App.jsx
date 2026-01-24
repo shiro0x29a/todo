@@ -98,14 +98,45 @@ if (filter === 'all') {
     console.log(1, filter)
 }
 
-const filteredTasks = tasks.filter(task => {
+// const filteredTasks = tasks.filter(task => {
+//     if (filter === 'all') return true
+//     if (filter === 'completed') return task.isCompleted
+//     if (filter === 'uncompleted') return !task.isCompleted
+//     return true
+//   })
+
+const [sortBy, setSortBy] = useState('created-desc') // по умолчанию — новые сверху
+
+const filteredTasks = sortTasks(
+  tasks.filter(task => {
     if (filter === 'all') return true
     if (filter === 'completed') return task.isCompleted
     if (filter === 'uncompleted') return !task.isCompleted
     return true
   })
+)
 
 console.log(filteredTasks)
+
+function sortTasks(tasks) {
+  return [...tasks].sort((a, b) => {
+    let dateA, dateB;
+
+    if (sortBy.includes('created')) {
+      dateA = new Date(a.created)
+      dateB = new Date(b.created)
+    } else {
+      dateA = a.edited ? new Date(a.edited) : new Date(a.created)
+      dateB = b.edited ? new Date(b.edited) : new Date(b.created)
+    }
+
+    if (sortBy.endsWith('asc')) {
+      return dateA - dateB
+    } else {
+      return dateB - dateA
+    }
+  })
+}
 
   return (
     <>
@@ -138,6 +169,34 @@ console.log(filteredTasks)
       </div>
         )}
     </form>
+
+    <div id="sortOptions">
+      <span>Sort by:</span>
+      <button 
+        className={sortBy === 'created-desc' ? 'active' : ''} 
+        onClick={() => setSortBy('created-desc')}
+      >
+        Newest
+      </button>
+      <button 
+        className={sortBy === 'created-asc' ? 'active' : ''} 
+        onClick={() => setSortBy('created-asc')}
+      >
+        Oldest
+      </button>
+      <button 
+        className={sortBy === 'edited-desc' ? 'active' : ''} 
+        onClick={() => setSortBy('edited-desc')}
+      >
+        Recently Edited
+      </button>
+      <button 
+        className={sortBy === 'edited-asc' ? 'active' : ''} 
+        onClick={() => setSortBy('edited-asc')}
+      >
+        Least Recently Edited
+      </button>
+    </div>
 
     <div className="taskList">
       {filteredTasks.length ? (
