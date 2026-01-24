@@ -77,6 +77,12 @@
   padding: 5px;
 }
 
+#filters ul li.active {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #333;
+}
+
 .taskList {
   display: grid;
   gap: 10px;

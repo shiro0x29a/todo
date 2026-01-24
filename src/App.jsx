@@ -115,11 +115,26 @@ console.log(filteredTasks)
       <button onClick={(e) => handleFilter(e)} id="filter">All</button>
       {showFilter && (
       <div id="filters">
-      <ul>
-	    <li onClick={() => filterAll()} className="filter-all">All</li>
-        <li onClick={() => filterCompleted()} className="filter-completed">Only completed</li>
-        <li onClick={() => filterUncompleted()} className="filter-uncompleted">Only uncompleted</li>
-      </ul>
+        <ul>
+          <li
+            onClick={() => filterAll()}
+            className={`filter-all ${filter === 'all' ? 'active' : ''}`}
+          >
+            All
+          </li>
+          <li
+            onClick={() => filterCompleted()}
+            className={`filter-completed ${filter === 'completed' ? 'active' : ''}`}
+          >
+            Only completed
+          </li>
+          <li
+            onClick={() => filterUncompleted()}
+            className={`filter-uncompleted ${filter === 'uncompleted' ? 'active' : ''}`}
+          >
+            Only uncompleted
+          </li>
+        </ul>
       </div>
         )}
     </form>
