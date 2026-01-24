@@ -138,6 +138,22 @@ function sortTasks(tasks) {
   })
 }
 
+const [currentPage, setCurrentPage] = useState(1)
+const tasksPerPage = 5 // сколько задач на странице
+
+const indexOfLastTask = currentPage * tasksPerPage
+const indexOfFirstTask = indexOfLastTask - tasksPerPage
+const getTasksForPage = filteredTasks.slice(indexOfFirstTask, indexOfLastTask)
+
+// function getTasksForPage(filteredTasks, page = 1, tasksPerPage = 5) {
+//   const indexOfLastTask = page * tasksPerPage
+//   const indexOfFirstTask = indexOfLastTask - tasksPerPage
+//   return filteredTasks.slice(indexOfFirstTask, indexOfLastTask)
+// }
+
+const totalPages = Math.ceil(filteredTasks.length / tasksPerPage)
+
+
   return (
     <>
     <form id="taskForm" noValidate>
@@ -198,9 +214,10 @@ function sortTasks(tasks) {
       </button>
     </div>
 
+
     <div className="taskList">
-      {filteredTasks.length ? (
-          filteredTasks.map(task => (
+      {getTasksForPage.length ? (
+          getTasksForPage.map(task => (
     <div key={task.id} className={`task ${task.isCompleted ? 'completed' : null}`}>
   <div className="taskWrap">
   <input onClick={() => taskToggle(task.id)} type="checkbox" className="checkbox" checked={task.isCompleted ? true : false}/>
@@ -216,6 +233,32 @@ function sortTasks(tasks) {
       ) : (
           <div className="empty">There are no tasks</div>
       )}
+    </div>
+
+    <div className="pagination">
+      <button 
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+      >
+        Prev
+      </button>
+
+      {Array.from({ length: totalPages }, (_, i) => (
+        <button 
+          key={i + 1} 
+          onClick={() => setCurrentPage(i + 1)}
+          className={currentPage === i + 1 ? 'active' : ''}
+        >
+          {i + 1}
+        </button>
+      ))}
+
+      <button 
+        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
     </div>
 
     {showPopup && (
