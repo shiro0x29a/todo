@@ -1,67 +1,92 @@
 import { useState, useEffect } from 'react'
 
-export function useTasks() {
+import { api } from './api'
+
+export function useTasks(user) {
   const [taskText, setTaskText] = useState('')
   const [tasks, setTodo] = useState([])
 
   useEffect(() => {
-    const newTodo = JSON.parse(localStorage.getItem('tasks'))
-    if (newTodo) setTodo(newTodo)
-  }, [])
+    if (!user) {
+      setTodo([])
+      return
+    }
 
-  useEffect(() => {
-    localStorage.tasks = JSON.stringify(tasks)
-  }, [tasks])
+    loadTasks()
+  }, [user])
 
-  function getFormattedTimestamp() {
-    const now = new Date()
-    return `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+  async function loadTasks() {
+    try {
+      const data = await api.get('/tasks')
+      setTodo(data)
+    } catch (err) {
+      console.log(err)
+      alert(err.message || 'Не удалось загрузить задачи')
+    }
   }
 
-  function handleSubmit(e) {
-    if (!taskText) return
+  async function handleSubmit(e) {
     e.preventDefault()
+    if (!taskText.trim()) return
 
-    const task = {
-      id: tasks.length + 1,
-      isCompleted: '',
-      text: taskText,
-      created: getFormattedTimestamp(),
-      edited: ''
+    try {
+      const task = await api.post('/tasks', { text: taskText })
+      setTodo(prev => [task, ...prev])
+      setTaskText('')
+    } catch (err) {
+      alert(err.message || 'Ошибка создания задачи')
     }
-
-    setTodo(prev => [task, ...prev])
-    setTaskText('')
   }
 
-  function taskToggle(id) {
-    const newTodo = tasks.map(t =>
-      t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
-    )
-    setTodo(newTodo)
-  }
+  async function taskToggle(id) {
+    const task = tasks.find(t => t.id === id)
+    if (!task) return
 
-  function handleEdit(task) {
-    const newText = prompt('Enter new description', task.text.trim())
-    if (newText !== null) {
-      const newTodo = tasks.map(t =>
-        t.id === task.id
-          ? { ...t, text: newText, created: '', edited: getFormattedTimestamp() }
-          : t
+    try {
+      const updated = await api.put(`/tasks/${id}`, {
+        isCompleted: !task.isCompleted
+      })
+
+      setTodo(prev =>
+        prev.map(t => (t.id === id ? updated : t))
       )
-      setTodo(newTodo)
+    } catch (err) {
+      alert(err.message || 'Ошибка обновления задачи')
     }
   }
 
-  function handleDelete(id) {
-    setTodo(tasks.filter(task => task.id !== id))
+  async function handleEdit(task) {
+    const newText = prompt('Enter new description', task.text)
+    if (!newText?.trim()) return
+
+    try {
+      const updated = await api.put(`/tasks/${task.id}`, {
+        text: newText
+      })
+
+      setTodo(prev =>
+        prev.map(t => (t.id === task.id ? updated : t))
+      )
+    } catch (err) {
+      alert(err.message || 'Ошибка редактирования задачи')
+    }
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm('Удалить задачу?')) return
+
+    try {
+      await api.delete(`/tasks/${id}`)
+      setTodo(prev => prev.filter(t => t.id !== id))
+    } catch (err) {
+      alert(err.message || 'Ошибка удаления задачи')
+    }
   }
 
   return {
     taskText,
     setTaskText,
     tasks,
-    setTodo,
     handleSubmit,
     taskToggle,
     handleEdit,

@@ -31,6 +31,9 @@ function App() {
     handleLogout
   } = useAuth()
 
+  useEffect(() => {
+    me()
+  }, [])
 
   // tasks
   const {
@@ -41,7 +44,7 @@ function App() {
     taskToggle,
     handleEdit,
     handleDelete
-  } = useTasks()
+  } = useTasks(user)
 
   // filters
   const {
@@ -55,22 +58,7 @@ function App() {
   } = useFilters()
 
   // sort
-  const [sortBy, setSortBy] = useState('created-desc')
-
-  // filter + sort
-  const filteredTasks = useSortTasks(tasks, filter, sortBy)
-
-  // pagination
-  const [currentPage, setCurrentPage] = useState(1)
-  const tasksPerPage = 5
-  const {
-    getTasksForPage,
-    totalPages
-  } = usePagination(filteredTasks, currentPage, setCurrentPage, tasksPerPage)
-
-  useEffect(() => {
-    me()
-  }, [])
+  const [sortBy, setSortBy] = useState('created-desc') 
 
   useEffect(() => {
     if (!user) return
@@ -83,6 +71,17 @@ function App() {
       setSortBy(user.sortBy)
     }
   }, [user])
+
+  // filter + sort
+  const filteredTasks = useSortTasks(user, tasks, filter, sortBy)
+
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const tasksPerPage = 5
+  const {
+    getTasksForPage,
+    totalPages
+  } = usePagination(filteredTasks, currentPage, setCurrentPage, tasksPerPage)
 
   // delete popup
   const [selectedTask, setSelectedTask] = useState(null)

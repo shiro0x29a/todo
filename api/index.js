@@ -70,48 +70,48 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// app.get('/tasks', authMiddleware, (req, res) => {
-//   const userTasks = tasks[req.user.email] || []
-//   res.json(userTasks)
-// })
+app.get('/tasks', authMiddleware, (req, res) => {
+  const userTasks = tasks[req.user.email] || []
+  res.json(userTasks)
+})
 
-// app.post('/tasks', authMiddleware, (req, res) => {
-//   const { text } = req.body
-//   if (!text) return res.status(400).json({ message: 'Task text required' })
-//
-//   const newTask = {
-//     id: Date.now(),
-//     text,
-//     isCompleted: false,
-//     created: new Date(),
-//     edited: null
-//   }
-//
-//   tasks[req.user.email].push(newTask)
-//   res.json(newTask)
-// })
+app.post('/tasks', authMiddleware, (req, res) => {
+  const { text } = req.body
+  if (!text) return res.status(400).json({ message: 'Task text required' })
 
-// app.put('/tasks/:id', authMiddleware, (req, res) => {
-//   const { id } = req.params
-//   const { text, isCompleted } = req.body
-//   const userTasks = tasks[req.user.email]
-//   const task = userTasks.find(t => t.id === +id)
-//   if (!task) return res.status(404).json({ message: 'Task not found' })
-//
-//   if (text !== undefined) task.text = text
-//   if (isCompleted !== undefined) task.isCompleted = isCompleted
-//   task.edited = new Date()
-//   res.json(task)
-// })
+  const newTask = {
+    id: Date.now(),
+    text,
+    isCompleted: false,
+    created: new Date(),
+    edited: null
+  }
 
-// app.delete('/tasks/:id', authMiddleware, (req, res) => {
-//   const { id } = req.params
-//   let userTasks = tasks[req.user.email]
-//   const index = userTasks.findIndex(t => t.id === +id)
-//   if (index === -1) return res.status(404).json({ message: 'Task not found' })
-//
-//   const removed = userTasks.splice(index, 1)
-//   res.json(removed[0])
-// })
+  tasks[req.user.email].push(newTask)
+  res.json(newTask)
+})
+
+app.put('/tasks/:id', authMiddleware, (req, res) => {
+  const { id } = req.params
+  const { text, isCompleted } = req.body
+  const userTasks = tasks[req.user.email]
+  const task = userTasks.find(t => t.id === +id)
+  if (!task) return res.status(404).json({ message: 'Task not found' })
+
+  if (text !== undefined) task.text = text
+  if (isCompleted !== undefined) task.isCompleted = isCompleted
+  task.edited = new Date()
+  res.json(task)
+})
+
+app.delete('/tasks/:id', authMiddleware, (req, res) => {
+  const { id } = req.params
+  let userTasks = tasks[req.user.email]
+  const index = userTasks.findIndex(t => t.id === +id)
+  if (index === -1) return res.status(404).json({ message: 'Task not found' })
+
+  const removed = userTasks.splice(index, 1)
+  res.json(removed[0])
+})
 
 app.listen(PORT, () => console.log(`Server running on :${PORT}`))
