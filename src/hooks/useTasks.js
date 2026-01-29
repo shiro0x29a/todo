@@ -21,7 +21,7 @@ export function useTasks(user) {
       setTodo(data)
     } catch (err) {
       console.log(err)
-      alert(err.message || 'Не удалось загрузить задачи')
+      alert(err.message || 'Error loading tasks')
     }
   }
 
@@ -34,7 +34,7 @@ export function useTasks(user) {
       setTodo(prev => [task, ...prev])
       setTaskText('')
     } catch (err) {
-      alert(err.message || 'Ошибка создания задачи')
+      alert(err.message || 'Error creating task')
     }
   }
 
@@ -51,7 +51,7 @@ export function useTasks(user) {
         prev.map(t => (t.id === id ? updated : t))
       )
     } catch (err) {
-      alert(err.message || 'Ошибка обновления задачи')
+      alert(err.message || 'Error updating task')
     }
   }
 
@@ -68,18 +68,16 @@ export function useTasks(user) {
         prev.map(t => (t.id === task.id ? updated : t))
       )
     } catch (err) {
-      alert(err.message || 'Ошибка редактирования задачи')
+      alert(err.message || 'Error updating task')
     }
   }
 
   async function handleDelete(id) {
-    if (!window.confirm('Удалить задачу?')) return
-
     try {
       await api.delete(`/tasks/${id}`)
       setTodo(prev => prev.filter(t => t.id !== id))
     } catch (err) {
-      alert(err.message || 'Ошибка удаления задачи')
+      alert(err.message || 'Error deleting task')
     }
   }
 
