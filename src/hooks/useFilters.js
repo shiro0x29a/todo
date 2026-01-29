@@ -25,6 +25,7 @@ export function useFilters() {
     filter,
     showFilter,
     handleFilter,
+    setFilter,
     filterAll,
     filterCompleted,
     filterUncompleted

@@ -1,10 +1,96 @@
 #root {
-  width: 430px;
+  width:500px;
   display: flex;
   flex-direction: column;
   background: #fff;
   padding: 10px;
   margin: 0 auto;
+  /* justify-content: center; */
+  /* align-items: center; */
+  border-radius: 8px;
+}
+
+.authForm {
+  width: 100%;
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 32px;
+  border: 1.5px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  background-color: #fff;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.authForm h2 {
+  margin-bottom: 24px;
+  color: #333;
+  font-size: 24px;
+}
+
+.authForm form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.authForm input {
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.authForm input:focus {
+  border-color: #007bff;
+}
+
+.authForm button {
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.authForm button:hover {
+  background-color: #0056b3;
+}
+
+.authForm p {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.authForm p span {
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.header-bar {
+  background-color: #1a1a1a;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 12px;
+  border-bottom: 1px solid #ccc;
+  /* border-radius: 2px; */
+}
+
+.header-bar button {
+  align-self: center;
+  height: auto;
+  margin: 0;
+  padding: 4px 12px;
 }
 
 #taskForm {
@@ -17,7 +103,7 @@
 }
 
 #taskInput {
-  width: 400px;
+  width: 465px;
   padding: 15px;
   margin-bottom: 10px;
   border: 1.5px solid #000;

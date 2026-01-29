@@ -1,6 +1,27 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
+
+import { api } from './api'
 
 export function useSortTasks(tasks, filter, sortBy) {
+  const saveSettings = async () => {
+    // if (!user) return
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+      await api.put(
+        '/me/settings',
+        { filter, sortBy },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+    } catch (err) {
+      console.error('Error saving settings:', err)
+    }
+  }
+
+  useEffect(() => {
+    saveSettings()
+  }, [filter, sortBy])
+
   return useMemo(() => {
     const filtered = tasks.filter(task => {
       if (filter === 'completed') return task.isCompleted
