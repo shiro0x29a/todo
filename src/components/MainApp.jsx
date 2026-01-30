@@ -64,6 +64,10 @@ export default function MainApp({ user, handleLogout }) {
   const { getTasksForPage, totalPages } =
     usePagination(filteredTasks, currentPage, setCurrentPage, tasksPerPage)
 
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [filter])
+
   const [selectedTask, setSelectedTask] = useState(null)
   const [showPopup, setShowPopup] = useState(false)
 
