@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import { api } from './api'
 
@@ -14,7 +14,6 @@ export function useAuth() {
       if (!token) return
 
       const data = await api.get('/me')
-  //     const res = await api.get('/me', { headers: { Authorization: `Bearer ${token}` } })
       setUser(data)
       console.log(user)
     } catch {
@@ -26,7 +25,7 @@ export function useAuth() {
   async function handleRegister(e) {
     e.preventDefault()
     try {
-      const res = await api.post('/register', { email, password })
+      await api.post('/register', { email, password })
       alert('Registration successful! Please log in.')
       setAuthMode('login')
     } catch (err) {

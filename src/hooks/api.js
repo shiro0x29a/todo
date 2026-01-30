@@ -1,4 +1,3 @@
-// api.js
 import axios from 'axios';
 
 // Базовый URL вашего Node.js сервера
@@ -36,7 +35,6 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Можно добавить логику рефреша токена или редиректа на логин
       localStorage.removeItem('token');
-      window.location.href = '/login';
     }
     return Promise.reject(error);
   }
