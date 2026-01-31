@@ -95,6 +95,12 @@ export default function MainApp({ user, handleLogout }) {
         taskText={taskText}
         setTaskText={setTaskText}
         handleSubmit={handleSubmit}
+        SortOptions={
+          <SortOptions
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
+        }
         Filter={
           <Filter
             filter={filter}
@@ -106,8 +112,6 @@ export default function MainApp({ user, handleLogout }) {
           />
         }
       />
-
-      <SortOptions sortBy={sortBy} setSortBy={setSortBy} />
 
       <TaskList
         tasks={getTasksForPage}

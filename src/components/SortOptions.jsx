@@ -1,37 +1,48 @@
-function SortOptions({ sortBy, setSortBy }) {
+import PropTypes from 'prop-types'
+import { useState } from 'react'
+
+export default function SortOptions({ sortBy, setSortBy }) {
+  const [showSort, setShowSort] = useState(false)
+
+  const handleToggle = () => setShowSort(!showSort)
+
+  const handleSelect = (type) => {
+    setSortBy(type)
+    setShowSort(false)
+  }
+
+  const sortNameMap = {
+    'created-desc': 'Newest',
+    'created-asc': 'Oldest',
+    'edited-desc': 'Recently Edited',
+    'edited-asc': 'Least Recently Edited',
+  }
+
   return (
-    <div id="sortOptions">
-      <span>Sort by:</span>
-
-      <button
-        className={sortBy === 'created-desc' ? 'active' : ''}
-        onClick={() => setSortBy('created-desc')}
-      >
-        Newest
+    <div className="sort-wrapper">
+      <button type="button" id="sortButton" onClick={handleToggle}>
+        {sortNameMap[sortBy]} ▼
       </button>
 
-      <button
-        className={sortBy === 'created-asc' ? 'active' : ''}
-        onClick={() => setSortBy('created-asc')}
-      >
-        Oldest
-      </button>
-
-      <button
-        className={sortBy === 'edited-desc' ? 'active' : ''}
-        onClick={() => setSortBy('edited-desc')}
-      >
-        Recently Edited
-      </button>
-
-      <button
-        className={sortBy === 'edited-asc' ? 'active' : ''}
-        onClick={() => setSortBy('edited-asc')}
-      >
-        Least Recently Edited
-      </button>
+      {showSort && (
+        <ul id="sortDropdown">
+          {Object.entries(sortNameMap).map(([key, label]) => (
+            <li
+              key={key}
+              onClick={() => handleSelect(key)}
+              className={sortBy === key ? 'active' : ''}
+            >
+              {sortBy === key && <span className="check">✔</span>}
+              {label}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
 
-export default SortOptions
+SortOptions.propTypes = {
+  sortBy: PropTypes.string.isRequired,
+  setSortBy: PropTypes.func.isRequired,
+}

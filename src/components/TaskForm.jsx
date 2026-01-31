@@ -4,6 +4,7 @@ function TaskForm({
   taskText,
   setTaskText,
   handleSubmit,
+  SortOptions,
   Filter
 }) {
   return (
@@ -27,6 +28,8 @@ function TaskForm({
           Add task
         </button>
 
+        {SortOptions}
+
         {Filter}
       </div>
     </form>
@@ -37,6 +40,7 @@ TaskForm.propTypes = {
   taskText: PropTypes.string.isRequired,
   setTaskText: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  SortOptions: PropTypes.node.isRequired,
   Filter: PropTypes.node.isRequired
 }
 
