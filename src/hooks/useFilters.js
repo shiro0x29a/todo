@@ -4,9 +4,10 @@ export function useFilters() {
   const [filter, setFilter] = useState('all')
   const [showFilter, setShowFilter] = useState(false)
 
-  function handleFilter(e) {
-    e.preventDefault()
-    setShowFilter(!showFilter)
+  function handleFilter(e, value) {
+    if (e) e.preventDefault()
+    if (typeof value === 'boolean') setShowFilter(value)
+    else setShowFilter(prev => !prev)
   }
 
   function filterAll() {
