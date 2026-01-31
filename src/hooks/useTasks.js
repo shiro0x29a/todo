@@ -26,7 +26,7 @@ export function useTasks(user) {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault()
+    // e.preventDefault()
     if (!taskText.trim()) return
 
     try {

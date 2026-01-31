@@ -94,19 +94,26 @@
 }
 
 #taskForm {
-  flex-grow: 1;
-  display: block;
-  align-items: center;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
   margin: 0 auto;
-  margin-bottom: 50px;
 }
 
 #taskInput {
+  width: 100%;
   width: 465px;
   padding: 15px;
   margin-bottom: 10px;
   border: 1.5px solid #000;
+}
+
+.buttons-row {
+  display: flex;
+  gap: 10px;
 }
 
 #createTask, #filter {
@@ -139,12 +146,15 @@
   color: #fff;
 }
 
+.filter-wrapper {
+  position: relative;
+}
+
 #filter {
   width: 162.8px;
   height: 41.8px;
   padding: 10px;
   /*border: 1.5px solid #000;*/
-  float: right;
 }
 
 #filters {
@@ -152,13 +162,12 @@
   border-radius: 10px;
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 0;
   background: black;
   border: 1.5px solid #fff;
   list-style: none;
   padding: 0;
   margin: 4px 0 0 0;
-  width: max-content;
   z-index: 1000;
   color: white;
   overflow: hidden;

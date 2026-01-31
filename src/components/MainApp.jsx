@@ -9,9 +9,10 @@ import { usePagination } from '../hooks/usePagination'
 import { useDeletePopup } from '../hooks/useDeletePopup'
 
 import TaskForm from './TaskForm'
+import Filter from './Filter'
+import SortOptions from './SortOptions'
 import TaskList from './TaskList'
 import Pagination from './Pagination'
-import SortOptions from './SortOptions'
 import DeletePopup from './DeletePopup'
 
 MainApp.propTypes = {
@@ -94,12 +95,16 @@ export default function MainApp({ user, handleLogout }) {
         taskText={taskText}
         setTaskText={setTaskText}
         handleSubmit={handleSubmit}
-        showFilter={showFilter}
-        handleFilter={handleFilter}
-        filter={filter}
-        filterAll={filterAll}
-        filterCompleted={filterCompleted}
-        filterUncompleted={filterUncompleted}
+        Filter={
+          <Filter
+            filter={filter}
+            showFilter={showFilter}
+            handleFilter={handleFilter}
+            filterAll={filterAll}
+            filterCompleted={filterCompleted}
+            filterUncompleted={filterUncompleted}
+          />
+        }
       />
 
       <SortOptions sortBy={sortBy} setSortBy={setSortBy} />
