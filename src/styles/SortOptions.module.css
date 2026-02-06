@@ -1,0 +1,70 @@
+.sortWrapper {
+  position: relative;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 180px;
+  height: 41.8px;
+  padding: 0.6em 1.2em;
+
+  border-radius: 8px;
+  border: 1px solid transparent;
+
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+
+  background-color: #1a1a1a;
+  color: white;
+
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.button:hover {
+  border-color: #646cff;
+}
+
+.button:focus,
+.button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.sortDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  margin: 4px 0 0 0;
+  padding: 0;
+
+  list-style: none;
+  background: black;
+  border: 1.5px solid #fff;
+  border-radius: 10px;
+
+  z-index: 1000;
+  color: white;
+  overflow: hidden;
+}
+
+.sortBy {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.sortBy:hover {
+  background: #222;
+}
+
+.active {
+  background-color: #4caf50;
+}
+
+.check {
+  margin-right: 6px;
+}

@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
 
+import styles from '../styles/TaskForm.module.css'
+
 function TaskForm({
   taskText,
   setTaskText,
@@ -9,7 +11,7 @@ function TaskForm({
 }) {
   return (
     <form
-      id="taskForm"
+      className={styles.taskForm}
       noValidate
       onSubmit={e => {
         e.preventDefault()
@@ -17,14 +19,14 @@ function TaskForm({
       }}
     >
       <input
-        id="taskInput"
+        className={styles.taskInput}
         value={taskText}
         onChange={e => setTaskText(e.target.value)}
         placeholder="Enter task description..."
       />
 
-      <div className="buttons-row">
-        <button type="submit" id="createTask">
+      <div className={styles.buttonsRow}>
+        <button type="submit" className={styles.createTask}>
           Add task
         </button>
 

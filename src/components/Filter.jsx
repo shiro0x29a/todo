@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
 
+import styles from '../styles/Filter.module.css'
+
 export default function Filter({
   filter,
   showFilter,
@@ -22,37 +24,31 @@ export default function Filter({
   }
 
   return (
-    <div className="filter-wrapper">
+    <div className={styles.filterWrapper}>
       <button
         type="button"
-        id="filter"
         onClick={handleFilter}
+        className={styles.button}
       >
         {filterNameMap[filter]} ▼
       </button>
 
       {showFilter && (
-        <ul
-          id="filters"
-        >
-          <li
-            onClick={() => handleSelect('all')}
-            className={`filter-all ${filter === 'all' ? 'active' : ''}`}
-          >
-            {filter === 'all' && <span className="check">✔</span>}All
-          </li>
-          <li
-            onClick={() => handleSelect('completed')}
-            className={`filter-completed ${filter === 'completed' ? 'active' : ''}`}
-          >
-            {filter === 'completed' && <span className="check">✔</span>}Only completed
-          </li>
-          <li
-            onClick={() => handleSelect('uncompleted')}
-            className={`filter-uncompleted ${filter === 'uncompleted' ? 'active' : ''}`}
-          >
-            {filter === 'uncompleted' && <span className="check">✔</span>}Only uncompleted
-          </li>
+        <ul className={styles.filters}>
+          {['all', 'completed', 'uncompleted'].map(type => (
+            <li
+              key={type}
+              onClick={() => handleSelect(type)}
+              className={`${styles.item} ${
+                filter === type ? styles.active : ''
+              }`}
+            >
+              {filter === type && (
+                <span className={styles.check}>✔</span>
+              )}
+              {filterNameMap[type]}
+            </li>
+          ))}
         </ul>
       )}
     </div>

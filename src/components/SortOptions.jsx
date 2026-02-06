@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 
+import styles from '../styles/SortOptions.module.css'
+
 export default function SortOptions({ sortBy, setSortBy }) {
   const [showSort, setShowSort] = useState(false)
 
@@ -19,20 +21,22 @@ export default function SortOptions({ sortBy, setSortBy }) {
   }
 
   return (
-    <div className="sort-wrapper">
-      <button type="button" id="sortButton" onClick={handleToggle}>
+    <div className={styles.sortWrapper}>
+      <button className={styles.button} type="button" onClick={handleToggle}>
         {sortNameMap[sortBy]} ▼
       </button>
 
       {showSort && (
-        <ul id="sortDropdown">
+        <ul className={styles.sortDropdown}>
           {Object.entries(sortNameMap).map(([key, label]) => (
             <li
               key={key}
               onClick={() => handleSelect(key)}
-              className={sortBy === key ? 'active' : ''}
+              className={`${styles.sortBy} ${
+                sortBy === key ? styles.active : ''
+              }`}
             >
-              {sortBy === key && <span className="check">✔</span>}
+              {sortBy === key && <span className={styles.check}>✔</span>}
               {label}
             </li>
           ))}

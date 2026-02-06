@@ -1,5 +1,6 @@
 import React from 'react'
 
+import styles from '../styles/AuthForm.module.css'
 import { useAuthContext } from '../context/AuthContext'
 
 function AuthForm() {
@@ -15,7 +16,7 @@ function AuthForm() {
   } = useAuthContext()
 
   return (
-    <div className="authForm">
+    <div className={styles.authForm}>
       <h2>{authMode === 'login' ? 'Login' : 'Register'}</h2>
 
       <form onSubmit={authMode === 'login' ? handleLogin : handleRegister}>
