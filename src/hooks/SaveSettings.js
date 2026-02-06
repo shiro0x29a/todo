@@ -1,7 +1,6 @@
 import { api } from '../hooks/api'
 
-export async function saveSettings(user, filter, sortBy) {
-  if (!user) return
+export async function saveSettings(filter, sortBy) {
   try {
     await api.put(
       '/me/settings',

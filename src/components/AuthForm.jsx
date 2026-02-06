@@ -1,17 +1,18 @@
 import React from 'react'
 
-function AuthForm({
-  user,
-  email,
-  setEmail,
-  password,
-  setPassword,
-  authMode,
-  setAuthMode,
-  handleLogin,
-  handleRegister
-}) {
-  if (user) return null
+import { useAuthContext } from '../context/AuthContext'
+
+function AuthForm() {
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    authMode,
+    setAuthMode,
+    handleLogin,
+    handleRegister
+  } = useAuthContext()
 
   return (
     <div className="authForm">

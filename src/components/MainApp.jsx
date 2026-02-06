@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
+
+import { useAuthContext } from '../context/AuthContext'
 
 import { useTasks } from '../hooks/useTasks'
 import { useFilters } from '../hooks/useFilters'
@@ -15,16 +16,9 @@ import TaskList from './TaskList'
 import Pagination from './Pagination'
 import DeletePopup from './DeletePopup'
 
-MainApp.propTypes = {
-  user: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    filter: PropTypes.string,
-    sortBy: PropTypes.string,
-  }).isRequired,
-  handleLogout: PropTypes.func.isRequired,
-}
+export default function MainApp() {
+  const { user, handleLogout } = useAuthContext()
 
-export default function MainApp({ user, handleLogout }) {
   const {
     taskText,
     setTaskText,
@@ -33,7 +27,7 @@ export default function MainApp({ user, handleLogout }) {
     taskToggle,
     handleEdit,
     handleDelete
-  } = useTasks(user)
+  } = useTasks()
 
   const {
     filter,
@@ -48,13 +42,12 @@ export default function MainApp({ user, handleLogout }) {
   const [sortBy, setSortBy] = useState('created-desc')
 
   useEffect(() => {
-    if (!user) return
     if (user.filter) setFilter(user.filter)
     if (user.sortBy) setSortBy(user.sortBy)
   }, [user])
 
   useEffect(() => {
-    saveSettings(user, filter, sortBy)
+    saveSettings(filter, sortBy)
   }, [filter, sortBy])
 
   const filteredTasks = useSortTasks(tasks, filter, sortBy)

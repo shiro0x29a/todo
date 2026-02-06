@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react'
 
+import { useAuthContext } from '../context/AuthContext'
 import { api } from './api'
 
-export function useTasks(user) {
+export function useTasks() {
+  const user = useAuthContext()
+
   const [taskText, setTaskText] = useState('')
   const [tasks, setTodo] = useState([])
 
   useEffect(() => {
-    if (!user) {
-      setTodo([])
-      return
-    }
-
     loadTasks()
   }, [user])
 
