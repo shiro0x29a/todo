@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 
 import { useAuthContext } from '../context/AuthContext'
+import { useFilterContext } from '../context/FilterContext'
+import { useSortContext } from '../context/SortContext'
 
 import { useTasks } from '../hooks/useTasks'
-import { useFilters } from '../hooks/useFilters'
+// import { useFilters } from '../hooks/useFilters'
 import { saveSettings } from '../hooks/SaveSettings'
 import { useSortTasks } from '../hooks/useSortTasks'
 import { usePagination } from '../hooks/usePagination'
-import { useDeletePopup } from '../hooks/useDeletePopup'
+// import { useDeletePopup } from '../hooks/useDeletePopup'
+import { useDeletePopupContext } from '../context/DeletePopupContext'
 
 import TaskForm from './TaskForm'
 import Filter from './Filter'
@@ -31,15 +34,10 @@ export default function MainApp() {
 
   const {
     filter,
-    showFilter,
-    handleFilter,
-    setFilter,
-    filterAll,
-    filterCompleted,
-    filterUncompleted
-  } = useFilters()
+    setFilter
+  } = useFilterContext()
 
-  const [sortBy, setSortBy] = useState('created-desc')
+  const { sortBy, setSortBy } = useSortContext()
 
   useEffect(() => {
     if (user.filter) setFilter(user.filter)
@@ -62,20 +60,19 @@ export default function MainApp() {
     setCurrentPage(1)
   }, [filter])
 
-  const [selectedTask, setSelectedTask] = useState(null)
-  const [showPopup, setShowPopup] = useState(false)
-
   const {
-    handleDeleteClick,
-    handleConfirmDelete,
-    handleCancelDelete
-  } = useDeletePopup({
     selectedTask,
     setSelectedTask,
-    showPopup,
-    setShowPopup,
-    handleDelete
-  })
+    handleDeleteClick,
+    setShowPopup
+  } = useDeletePopupContext()
+
+  function handleConfirmDelete() {
+    handleDelete(selectedTask)
+    setSelectedTask(null)
+    setShowPopup(false)
+  }
+
 
   return (
     <>
@@ -90,18 +87,10 @@ export default function MainApp() {
         handleSubmit={handleSubmit}
         SortOptions={
           <SortOptions
-            sortBy={sortBy}
-            setSortBy={setSortBy}
           />
         }
         Filter={
           <Filter
-            filter={filter}
-            showFilter={showFilter}
-            handleFilter={handleFilter}
-            filterAll={filterAll}
-            filterCompleted={filterCompleted}
-            filterUncompleted={filterUncompleted}
           />
         }
       />
@@ -119,12 +108,9 @@ export default function MainApp() {
         setCurrentPage={setCurrentPage}
       />
 
-      {showPopup && (
         <DeletePopup
-          onConfirm={handleConfirmDelete}
-          onCancel={handleCancelDelete}
+          handleConfirmDelete={handleConfirmDelete}
         />
-      )}
     </>
   )
 }

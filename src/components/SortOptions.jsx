@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types'
 import { useState } from 'react'
 
+import { useSortContext } from '../context/SortContext'
 import styles from '../styles/SortOptions.module.css'
 
-export default function SortOptions({ sortBy, setSortBy }) {
+export default function SortOptions() {
+  const { sortBy, setSortBy } = useSortContext()
   const [showSort, setShowSort] = useState(false)
 
   const handleToggle = () => setShowSort(!showSort)
@@ -44,9 +45,4 @@ export default function SortOptions({ sortBy, setSortBy }) {
       )}
     </div>
   )
-}
-
-SortOptions.propTypes = {
-  sortBy: PropTypes.string.isRequired,
-  setSortBy: PropTypes.func.isRequired,
 }

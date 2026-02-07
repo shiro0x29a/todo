@@ -1,25 +1,26 @@
-import PropTypes from 'prop-types'
-
 import styles from '../styles/Filter.module.css'
+import { FilterProvider, useFilterContext } from '../context/FilterContext'
 
-export default function Filter({
-  filter,
-  showFilter,
-  handleFilter,
-  filterAll,
-  filterCompleted,
-  filterUncompleted
-}) {
+function Filter() {
+  const {
+    filter,
+    showFilter,
+    handleFilter,
+    filterAll,
+    filterCompleted,
+    filterUncompleted
+  } = useFilterContext()
+
   const filterNameMap = {
     all: 'All',
     completed: 'Only completed',
     uncompleted: 'Only uncompleted'
   }
+
   const handleSelect = (type) => {
     if (type === 'all') filterAll()
     if (type === 'completed') filterCompleted()
     if (type === 'uncompleted') filterUncompleted()
-
     handleFilter(false)
   }
 
@@ -55,11 +56,4 @@ export default function Filter({
   )
 }
 
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  showFilter: PropTypes.bool.isRequired,
-  handleFilter: PropTypes.func.isRequired,
-  filterAll: PropTypes.func.isRequired,
-  filterCompleted: PropTypes.func.isRequired,
-  filterUncompleted: PropTypes.func.isRequired,
-}
+export default Filter
