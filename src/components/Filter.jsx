@@ -1,7 +1,10 @@
 import styles from '../styles/Filter.module.css'
 import { FilterProvider, useFilterContext } from '../context/FilterContext'
+import { useTranslation } from '../hooks/useTranslation'
 
 function Filter() {
+  const { t } = useTranslation();
+
   const {
     filter,
     showFilter,
@@ -12,9 +15,9 @@ function Filter() {
   } = useFilterContext()
 
   const filterNameMap = {
-    all: 'All',
-    completed: 'Only completed',
-    uncompleted: 'Only uncompleted'
+    all: t('todo.all'),
+    completed: t('todo.only-completed'),
+    uncompleted: t('todo.only-uncompleted')
   }
 
   const handleSelect = (type) => {

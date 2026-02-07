@@ -1,0 +1,36 @@
+{
+  "header": {
+    "title": "Todo App"
+  },
+  "todo": {
+    "placeholder": "Enter task description...",
+    "addTask": "Add task",
+    "askDelete": "Are you sure you want to delete the task?",
+
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "recently-edited": "Recently Edited",
+    "least-recently-edited": "Least Recently Edited",
+
+    "all": "All",
+    "only-completed": "Only completed",
+    "only-uncompleted": "Only uncompleted",
+
+    "edited": "Edited",
+    "created": "Created",
+    "emptyList": "There are no tasks",
+
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred"
+  },
+  "yes": "Yes",
+  "no": "No",
+  "prev": "Prev",
+  "next": "Next"
+}

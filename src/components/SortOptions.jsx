@@ -1,9 +1,12 @@
 import { useState } from 'react'
 
-import { useSortContext } from '../context/SortContext'
 import styles from '../styles/SortOptions.module.css'
+import { useSortContext } from '../context/SortContext'
+import { useTranslation } from '../hooks/useTranslation'
 
 export default function SortOptions() {
+  const { t } = useTranslation();
+
   const { sortBy, setSortBy } = useSortContext()
   const [showSort, setShowSort] = useState(false)
 
@@ -15,16 +18,16 @@ export default function SortOptions() {
   }
 
   const sortNameMap = {
-    'created-desc': 'Newest',
-    'created-asc': 'Oldest',
-    'edited-desc': 'Recently Edited',
-    'edited-asc': 'Least Recently Edited',
+    'created-desc': t('todo.newest'),
+    'created-asc': t('todo.oldest'),
+    'edited-desc': t('todo.recently-edited'),
+    'edited-asc': t('todo.least-recently-edited'),
   }
 
   return (
     <div className={styles.sortWrapper}>
       <button className={styles.button} type="button" onClick={handleToggle}>
-        {sortNameMap[sortBy]} ▼
+        {sortNameMap[sortBy]}▼
       </button>
 
       {showSort && (

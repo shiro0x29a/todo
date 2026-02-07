@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import AuthProvider from './context/AuthContext'
+import LangProvider from './context/LangContext'
 import { FilterProvider } from './context/FilterContext'
 import { SortProvider } from './context/SortContext'
 import { DeletePopupProvider } from './context/DeletePopupContext'
@@ -17,6 +18,7 @@ function composeProviders(...providers) {
 
 export const AllProviders = composeProviders(
   AuthProvider,
+  LangProvider,
   FilterProvider,
   SortProvider,
   DeletePopupProvider

@@ -1,7 +1,10 @@
 import styles from '../styles/DeletePopup.module.css'
+import { useTranslation } from '../hooks/useTranslation'
 import { useDeletePopupContext } from '../context/DeletePopupContext'
 
 export default function DeletePopup({ handleConfirmDelete }) {
+  const { t } = useTranslation();
+
   const {
     showPopup,
     handleCancelDelete
@@ -11,11 +14,11 @@ export default function DeletePopup({ handleConfirmDelete }) {
 
   return (
     <div className={styles.popupDelete}>
-      <p>Are you sure you want to delete the task?</p>
+      <p>{t('todo.askDelete')}</p>
 
       <div className={styles.popupButtons}>
-        <button onClick={handleConfirmDelete}>Yes</button>
-        <button onClick={handleCancelDelete}>No</button>
+        <button onClick={handleConfirmDelete}>{t('yes')}</button>
+        <button onClick={handleCancelDelete}>{t('no')}</button>
       </div>
     </div>
   )

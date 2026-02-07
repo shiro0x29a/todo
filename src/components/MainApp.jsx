@@ -12,6 +12,7 @@ import { usePagination } from '../hooks/usePagination'
 // import { useDeletePopup } from '../hooks/useDeletePopup'
 import { useDeletePopupContext } from '../context/DeletePopupContext'
 
+import LangSwitcher from './LangSwitcher'
 import TaskForm from './TaskForm'
 import Filter from './Filter'
 import SortOptions from './SortOptions'
@@ -78,7 +79,10 @@ export default function MainApp() {
     <>
       <div className="header-bar">
         <span>{user.email}</span>
-        <button onClick={handleLogout}>Logout</button>
+        <div className="header-right">
+          <LangSwitcher />
+          <button onClick={handleLogout}>Logout</button>
+        </div>
       </div>
 
       <TaskForm

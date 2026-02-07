@@ -1,6 +1,9 @@
 import styles from '../styles/TaskList.module.css'
+import { useTranslation } from '../hooks/useTranslation'
 
 function TaskList({ tasks, taskToggle, handleEdit, handleDeleteClick }) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.taskList}>
       {tasks.length ? (
@@ -40,13 +43,13 @@ function TaskList({ tasks, taskToggle, handleEdit, handleDeleteClick }) {
 
             <div className={styles.timeStamp}>
               {task.edited
-                ? `Edited: ${task.edited}`
-                : `Created: ${task.created}`}
+                ? `${t('todo.edited')}: ${task.edited}`
+                : `${t('todo.created')}: ${task.created}`}
             </div>
           </div>
         ))
       ) : (
-        <div className={styles.empty}>There are no tasks</div>
+        <div className={styles.empty}>{t('todo.emptyList')}</div>
       )}
     </div>
   )

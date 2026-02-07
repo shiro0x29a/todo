@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 
 import styles from '../styles/TaskForm.module.css'
+import { useTranslation } from '../hooks/useTranslation'
 
 function TaskForm({
   taskText,
@@ -9,6 +10,8 @@ function TaskForm({
   SortOptions,
   Filter
 }) {
+  const { t } = useTranslation();
+
   return (
     <form
       className={styles.taskForm}
@@ -22,12 +25,12 @@ function TaskForm({
         className={styles.taskInput}
         value={taskText}
         onChange={e => setTaskText(e.target.value)}
-        placeholder="Enter task description..."
+        placeholder={t('todo.placeholder')}
       />
 
       <div className={styles.buttonsRow}>
         <button type="submit" className={styles.createTask}>
-          Add task
+          {t('todo.addTask')}
         </button>
 
         {SortOptions}
