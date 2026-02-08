@@ -12,7 +12,7 @@ import { usePagination } from '../hooks/usePagination'
 // import { useDeletePopup } from '../hooks/useDeletePopup'
 import { useDeletePopupContext } from '../context/DeletePopupContext'
 
-import LangSwitcher from './LangSwitcher'
+import Header from './Header'
 import TaskForm from './TaskForm'
 import Filter from './Filter'
 import SortOptions from './SortOptions'
@@ -21,7 +21,7 @@ import Pagination from './Pagination'
 import DeletePopup from './DeletePopup'
 
 export default function MainApp() {
-  const { user, handleLogout } = useAuthContext()
+  const { user } = useAuthContext()
 
   const {
     taskText,
@@ -74,16 +74,9 @@ export default function MainApp() {
     setShowPopup(false)
   }
 
-
   return (
     <>
-      <div className="header-bar">
-        <span>{user.email}</span>
-        <div className="header-right">
-          <LangSwitcher />
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      </div>
+      <Header />
 
       <TaskForm
         taskText={taskText}

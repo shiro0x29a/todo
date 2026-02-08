@@ -1,0 +1,24 @@
+.header {
+  background-color: #1a1a1a;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding: 4px 12px;
+}
+
+.header button {
+  margin: 0;
+  padding: 4px 12px;
+
+  font-size: 0.8em;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.headerRight {
+  display: flex;
+  gap: 16px;
+}
+

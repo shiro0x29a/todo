@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLanguage } from '../context/LangContext'
+import styles from '../styles/LangSwitcher.module.css'
 
 const LanguageSwitcher = () => {
   const { currentLanguage, changeLanguage } = useLanguage()
@@ -14,22 +15,24 @@ const LanguageSwitcher = () => {
     languages.find(lang => lang.code === currentLanguage) || languages[0]
 
   return (
-    <div className="language-switcher">
+    <div className={styles.languageSwitcher}>
       <div
-        className="language-current"
+        className={styles.languageCurrent}
         onClick={() => setIsOpen(prev => !prev)}
       >
         {currentLang.flag} {currentLang.name}
       </div>
 
       {isOpen && (
-        <ul className="language-select">
+        <ul className={styles.languageSelect}>
           {languages.map(lang => (
             <li
               key={lang.code}
-              className={`language-item ${
-                lang.code === currentLanguage ? 'active' : ''
-              }`}
+              className={
+                lang.code === currentLanguage
+                  ? `${styles.languageItem} ${styles.active}`
+                  : styles.languageItem
+              }
               onClick={() => {
                 changeLanguage(lang.code)
                 setIsOpen(false)

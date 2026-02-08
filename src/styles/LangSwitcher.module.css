@@ -1,0 +1,48 @@
+.languageSwitcher {
+  position: relative;
+  align-items: center;
+}
+
+.languageCurrent {
+  border: 1px solid transparent;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.languageCurrent {
+  white-space: nowrap;
+  padding: 4px 12px;
+  background: #6b6b6b;
+}
+
+.languageSelect {
+  position: absolute;
+  z-index: 1000;
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 0;
+  background-color: #1a1a1a;
+  color: white;
+  border: 1px solid #000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.languageItem {
+  width: 43.5px;
+  display: list-item;
+  cursor: pointer;
+  padding: 4px 12px;
+}
+
+.languageItem:hover {
+  background: #222;
+}
+
+.active {
+  background-color: #4caf50;
+}
