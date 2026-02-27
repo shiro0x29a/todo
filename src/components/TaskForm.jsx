@@ -2,15 +2,18 @@ import PropTypes from 'prop-types'
 
 import styles from '../styles/TaskForm.module.css'
 import { useTranslation } from '../hooks/useTranslation'
+import { useTodoContext } from '../context/TodoContext'
 
 function TaskForm({
-  taskText,
-  setTaskText,
-  handleSubmit,
   SortOptions,
   Filter
 }) {
   const { t } = useTranslation();
+  const {
+    taskText,
+    setTaskText,
+    handleSubmit,
+  } = useTodoContext()
 
   return (
     <form
@@ -42,9 +45,6 @@ function TaskForm({
 }
 
 TaskForm.propTypes = {
-  taskText: PropTypes.string.isRequired,
-  setTaskText: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
   SortOptions: PropTypes.node.isRequired,
   Filter: PropTypes.node.isRequired
 }

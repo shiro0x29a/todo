@@ -1,8 +1,16 @@
 import styles from '../styles/Pagination.module.css'
 import { useTranslation } from '../hooks/useTranslation'
+import { useTodoContext } from '../context/TodoContext'
 
-function Pagination({ currentPage, totalPages, setCurrentPage }) {
+export default function Pagination({
+}) {
   const { t } = useTranslation();
+  const {
+    currentPage,
+    totalPages,
+    setCurrentPage
+  } = useTodoContext()
+
   if (totalPages <= 1) return null
 
   return (
@@ -41,4 +49,3 @@ function Pagination({ currentPage, totalPages, setCurrentPage }) {
   )
 }
 
-export default Pagination

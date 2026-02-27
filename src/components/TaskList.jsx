@@ -1,8 +1,16 @@
 import styles from '../styles/TaskList.module.css'
 import { useTranslation } from '../hooks/useTranslation'
+import { useTodoContext } from '../context/TodoContext'
 
-function TaskList({ tasks, taskToggle, handleEdit, handleDeleteClick }) {
+export default function TaskList({
+}) {
   const { t } = useTranslation();
+  const {
+    tasks,
+    taskToggle,
+    handleEdit,
+    handleDeleteClick
+  } = useTodoContext()
 
   return (
     <div className={styles.taskList}>
@@ -55,4 +63,4 @@ function TaskList({ tasks, taskToggle, handleEdit, handleDeleteClick }) {
   )
 }
 
-export default TaskList
+
