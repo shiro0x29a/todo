@@ -6,8 +6,8 @@ import { useAuthContext } from './context/AuthContext'
 import AuthProvider from './context/AuthContext'
 import LangProvider from './context/LangContext'
 
-import AuthForm from './components/AuthForm'
-import MainApp from './components/MainApp'
+import Auth from './pages/Auth'
+import Todo from './pages/Todo'
 
 function App() {
   const { user } = useAuthContext()
@@ -16,12 +16,12 @@ function App() {
     <Routes>
       <Route
         path="/auth"
-        element={!user ? <AuthForm /> : <Navigate to="/" replace />}
+        element={!user ? <Auth /> : <Navigate to="/" replace />}
       />
 
       <Route
         path="/"
-        element={user ? <MainApp /> : <Navigate to="/auth" replace />}
+        element={user ? <Todo /> : <Navigate to="/auth" replace />}
       />
     </Routes>
   )

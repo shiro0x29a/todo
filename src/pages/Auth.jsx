@@ -3,7 +3,7 @@ import React from 'react'
 import styles from '../styles/AuthForm.module.css'
 import { useAuthContext } from '../context/AuthContext'
 
-function AuthForm() {
+export default function Auth() {
   const {
     email,
     setEmail,
@@ -50,4 +50,3 @@ function AuthForm() {
   )
 }
 
-export default AuthForm
