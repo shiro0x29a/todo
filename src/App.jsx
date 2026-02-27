@@ -5,9 +5,6 @@ import './App.css'
 import { useAuthContext } from './context/AuthContext'
 import AuthProvider from './context/AuthContext'
 import LangProvider from './context/LangContext'
-import { FilterProvider } from './context/FilterContext'
-import { SortProvider } from './context/SortContext'
-import { DeletePopupProvider } from './context/DeletePopupContext'
 
 import AuthForm from './components/AuthForm'
 import MainApp from './components/MainApp'
@@ -41,9 +38,6 @@ function composeProviders(...providers) {
 export const AllProviders = composeProviders(
   AuthProvider,
   LangProvider,
-  FilterProvider,
-  SortProvider,
-  DeletePopupProvider
 )
 
 export default () => {

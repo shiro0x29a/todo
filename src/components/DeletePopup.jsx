@@ -1,6 +1,5 @@
 import styles from '../styles/DeletePopup.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useDeletePopupContext } from '../context/DeletePopupContext'
 import { useTodoContext } from '../context/TodoContext'
 
 export default function DeletePopup({
@@ -8,13 +7,10 @@ export default function DeletePopup({
   const { t } = useTranslation();
 
   const {
-    handleConfirmDelete
-  } = useTodoContext()
-
-  const {
     showPopup,
+    handleConfirmDelete,
     handleCancelDelete
-  } = useDeletePopupContext()
+  } = useTodoContext()
 
   if (!showPopup) return null
 

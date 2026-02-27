@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
 import styles from '../styles/SortOptions.module.css'
-import { useSortContext } from '../context/SortContext'
 import { useTranslation } from '../hooks/useTranslation'
+import { useTodoContext } from '../context/TodoContext'
 
 export default function SortOptions() {
   const { t } = useTranslation();
 
-  const { sortBy, setSortBy } = useSortContext()
+  const { sortBy, setSortBy } = useTodoContext()
   const [showSort, setShowSort] = useState(false)
 
   const handleToggle = () => setShowSort(!showSort)

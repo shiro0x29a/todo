@@ -1,8 +1,8 @@
 import styles from '../styles/Filter.module.css'
-import { FilterProvider, useFilterContext } from '../context/FilterContext'
+import { useTodoContext } from '../context/TodoContext'
 import { useTranslation } from '../hooks/useTranslation'
 
-function Filter() {
+export default function Filter() {
   const { t } = useTranslation();
 
   const {
@@ -12,7 +12,7 @@ function Filter() {
     filterAll,
     filterCompleted,
     filterUncompleted
-  } = useFilterContext()
+  } = useTodoContext()
 
   const filterNameMap = {
     all: t('todo.all'),
@@ -59,4 +59,3 @@ function Filter() {
   )
 }
 
-export default Filter

@@ -1,16 +1,13 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
 import { useAuthContext } from '../context/AuthContext'
-import { useFilterContext } from '../context/FilterContext'
-import { useSortContext } from '../context/SortContext'
 
 import { useTasks } from '../hooks/useTasks'
-// import { useFilters } from '../hooks/useFilters'
+import { useFilters } from '../hooks/useFilters'
 import { saveSettings } from '../hooks/SaveSettings'
 import { useSortTasks } from '../hooks/useSortTasks'
 import { usePagination } from '../hooks/usePagination'
-// import { useDeletePopup } from '../hooks/useDeletePopup'
-import { useDeletePopupContext } from '../context/DeletePopupContext'
+import { useDeletePopup } from '../hooks/useDeletePopup'
 
 const TodoContext = createContext()
 
@@ -31,10 +28,15 @@ export function TodoProvider({ children }) {
 
   const {
     filter,
-    setFilter
-  } = useFilterContext()
+    showFilter,
+    handleFilter,
+    setFilter,
+    filterAll,
+    filterCompleted,
+    filterUncompleted
+  } = useFilters()
 
-  const { sortBy, setSortBy } = useSortContext()
+  const [sortBy, setSortBy] = useState('created-desc')
 
   useEffect(() => {
     if (user.filter) setFilter(user.filter)
@@ -57,23 +59,35 @@ export function TodoProvider({ children }) {
     setCurrentPage(1)
   }, [filter])
 
+  const [selectedTask, setSelectedTask] = useState(null)
+  const [showPopup, setShowPopup] = useState(false)
+
   const {
+    handleDeleteClick,
+    handleConfirmDelete,
+    handleCancelDelete
+  } = useDeletePopup({
     selectedTask,
     setSelectedTask,
-    handleDeleteClick,
-    setShowPopup
-  } = useDeletePopupContext()
-
-  function handleConfirmDelete() {
-    handleDelete(selectedTask)
-    setSelectedTask(null)
-    setShowPopup(false)
-  }
+    showPopup,
+    setShowPopup,
+    handleDelete
+  })
 
   const value = {
     taskText,
     setTaskText,
     handleSubmit,
+
+    filter,
+    showFilter,
+    handleFilter,
+    filterAll,
+    filterCompleted,
+    filterUncompleted,
+
+    sortBy,
+    setSortBy,
 
     tasks: getTasksForPage,
     taskToggle,
@@ -84,51 +98,10 @@ export function TodoProvider({ children }) {
     totalPages,
     setCurrentPage,
 
+    showPopup,
     handleConfirmDelete,
-
-    // // params: {
-    // filter,
-    // setFilter,
-    // sortBy,
-    // setSortBy,
-    // currentPage,
-    // setCurrentPage,
-    // totalPages
-    // // },
-    // modal: {
-    //   config: deleteModal,
-    //   open: (id) => setDeleteModal({ isOpen: true, todoId: id }),
-    //   close: () => setDeleteModal({ isOpen: false, todoId: null })
-    // },
-    // actions: {
-    //   handleSubmit,
-    //   // addTodo: (text) => setTodos(p => [...p, { id: Date.now(), text, completed: false }]),
-    //   taskToggle,
-    //   handleEdit,
-    //   // toggleTodo: (id) => setTodos(p => p.map(t => t.id === id ? { ...t, completed: !t.completed } : t)),
-    //   confirmDelete: () => {
-    //     setTodos(p => p.filter(t => t.id !== deleteModal.todoId));
-    //     setDeleteModal({ isOpen: false, todoId: null });
-    //   }
-    // }
+    handleCancelDelete,
   }
-  // const value = {
-  //   todos: paginatedTodos,
-  //   params: { filter, setFilter, sortBy, setSortBy, page, setPage, totalPages },
-  //   modal: {
-  //     config: deleteModal,
-  //     open: (id) => setDeleteModal({ isOpen: true, todoId: id }),
-  //     close: () => setDeleteModal({ isOpen: false, todoId: null })
-  //   },
-  //   actions: {
-  //     addTodo: (text) => setTodos(p => [...p, { id: Date.now(), text, completed: false }]),
-  //     toggleTodo: (id) => setTodos(p => p.map(t => t.id === id ? { ...t, completed: !t.completed } : t)),
-  //     confirmDelete: () => {
-  //       setTodos(p => p.filter(t => t.id !== deleteModal.todoId));
-  //       setDeleteModal({ isOpen: false, todoId: null });
-  //     }
-  //   }
-  // };
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>
 }
 
