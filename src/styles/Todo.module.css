@@ -1,0 +1,18 @@
+[data-theme='dark'] .todo {
+  --bg-color: #6E6E6E;
+  --text-color: #ffffff;
+}
+
+[data-theme='light'] .todo {
+  --bg-color: #fff;
+  --text-color: #000;
+}
+
+.todo {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 15px;
+  border-radius: 20px;
+  border: 1.5px solid #000;
+}
+

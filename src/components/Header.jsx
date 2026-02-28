@@ -1,6 +1,7 @@
 import styles from '../styles/Header.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import { useAuthContext } from '../context/AuthContext'
+import ThemeSwitcher from './ThemeSwitcher'
 import LangSwitcher from './LangSwitcher'
 
 export default function Header() {
@@ -11,6 +12,7 @@ export default function Header() {
     <div className={styles.header}>
       <span>{user.email}</span>
       <div className={styles.headerRight}>
+        <ThemeSwitcher />
         <LangSwitcher />
         <button onClick={handleLogout}>{t('logout')}</button>
       </div>

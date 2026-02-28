@@ -4,6 +4,7 @@ import './App.css'
 
 import { useAuthContext } from './context/AuthContext'
 import AuthProvider from './context/AuthContext'
+import ThemeProvider from './context/ThemeContext'
 import LangProvider from './context/LangContext'
 
 import Auth from './pages/Auth'
@@ -37,6 +38,7 @@ function composeProviders(...providers) {
 
 export const AllProviders = composeProviders(
   AuthProvider,
+  ThemeProvider,
   LangProvider,
 )
 
