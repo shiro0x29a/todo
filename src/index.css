@@ -29,6 +29,11 @@
   color: var(--text-color);
 }
 
+:body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -51,5 +56,4 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
 

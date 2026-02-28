@@ -10,7 +10,13 @@
   width: 470px;
 }
 
-.header button {
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #6b6b6b;
+  color: #fff;
   margin: 0;
   padding: 4px 12px;
 
