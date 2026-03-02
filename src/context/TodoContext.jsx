@@ -41,7 +41,7 @@ export function TodoProvider({ children }) {
   useEffect(() => {
     if (user.filter) setFilter(user.filter)
     if (user.sortBy) setSortBy(user.sortBy)
-  }, [user])
+  }, [user.filter, user.sortBy])
 
   useEffect(() => {
     saveSettings(filter, sortBy)
