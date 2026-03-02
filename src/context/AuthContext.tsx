@@ -1,3 +1,4 @@
+import { PropsWithChildren } from 'react';
 import { createContext, useContext } from 'react'
 import { useEffect, useState } from 'react'
 
@@ -11,7 +12,7 @@ export const useAuthContext = () => {
   return context
 }
 
-export default function AuthProvider({ children }) {
+export default function AuthProvider({ children }: PropsWithChildren) {
   const auth = useAuth()
   const [loading, setLoading] = useState(true)
 
