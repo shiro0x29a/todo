@@ -10,7 +10,12 @@
   width: 470px;
 }
 
-.button {
+.headerRight {
+  display: flex;
+  gap: 16px;
+}
+
+.headerRight button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,10 +28,5 @@
   font-size: 0.8em;
   font-weight: 500;
   font-family: inherit;
-}
-
-.headerRight {
-  display: flex;
-  gap: 16px;
 }
 

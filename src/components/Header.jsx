@@ -14,7 +14,7 @@ export default function Header() {
       <div className={styles.headerRight}>
         <ThemeSwitcher />
         <LangSwitcher />
-        <div className={styles.button} onClick={handleLogout}>{t('logout')}</div>
+        <button onClick={handleLogout}>{t('logout')}</button>
       </div>
     </div>
   )
