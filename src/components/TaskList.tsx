@@ -1,6 +1,7 @@
 import styles from '../styles/TaskList.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import { useTodoContext } from '../context/TodoContext'
+import { Task } from '../types'
 
 export default function TaskList({
 }) {
@@ -15,7 +16,7 @@ export default function TaskList({
   return (
     <div className={styles.taskList}>
       {tasks.length ? (
-        tasks.map(task => (
+        tasks.map((task: Task) => (
           <div
             key={task.id}
             className={`${styles.task} ${

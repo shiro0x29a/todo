@@ -1,13 +1,17 @@
-import PropTypes from 'prop-types'
-
+import { ReactNode } from 'react'
 import styles from '../styles/TaskForm.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import { useTodoContext } from '../context/TodoContext'
 
+interface TaskFormProps {
+  SortOptions: ReactNode
+  Filter: ReactNode
+}
+
 function TaskForm({
   SortOptions,
   Filter
-}) {
+}: TaskFormProps) {
   const { t } = useTranslation();
   const {
     taskText,
@@ -42,11 +46,6 @@ function TaskForm({
       </div>
     </form>
   )
-}
-
-TaskForm.propTypes = {
-  SortOptions: PropTypes.node.isRequired,
-  Filter: PropTypes.node.isRequired
 }
 
 export default TaskForm

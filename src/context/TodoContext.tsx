@@ -9,7 +9,9 @@ import { useSortTasks } from '../hooks/useSortTasks'
 import { usePagination } from '../hooks/usePagination'
 import { useDeletePopup } from '../hooks/useDeletePopup'
 
-const TodoContext = createContext()
+import { Task, SortType, TodoContextType } from '../types'
+
+const TodoContext = createContext<TodoContextType | undefined>(undefined)
 
 export const useTodoContext = () => useContext(TodoContext)
 
@@ -36,7 +38,7 @@ export function TodoProvider({ children }) {
     filterUncompleted
   } = useFilters()
 
-  const [sortBy, setSortBy] = useState('created-desc')
+  const [sortBy, setSortBy] = useState<SortType>('created-desc')
 
   useEffect(() => {
     if (user.filter) setFilter(user.filter)
@@ -49,7 +51,7 @@ export function TodoProvider({ children }) {
 
   const filteredTasks = useSortTasks(tasks, filter, sortBy)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState<number>(1)
   const tasksPerPage = 5
 
   const { getTasksForPage, totalPages } =
@@ -59,8 +61,8 @@ export function TodoProvider({ children }) {
     setCurrentPage(1)
   }, [filter])
 
-  const [selectedTask, setSelectedTask] = useState(null)
-  const [showPopup, setShowPopup] = useState(false)
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const [showPopup, setShowPopup] = useState<boolean>(false)
 
   const {
     handleDeleteClick,
@@ -74,7 +76,7 @@ export function TodoProvider({ children }) {
     handleDelete
   })
 
-  const value = {
+  const value: TodoContextType = {
     taskText,
     setTaskText,
     handleSubmit,

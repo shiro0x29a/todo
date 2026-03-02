@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { MouseEvent } from 'react'
+import { FilterType } from '../types'
 
 export function useFilters() {
-  const [filter, setFilter] = useState('all')
-  const [showFilter, setShowFilter] = useState(false)
+  const [filter, setFilter] = useState<FilterType>('all')
+  const [showFilter, setShowFilter] = useState<boolean>(false)
 
-  function handleFilter(e, value) {
+  function handleFilter(e: MouseEvent<HTMLButtonElement>, value: string) {
     if (e) e.preventDefault()
     if (typeof value === 'boolean') setShowFilter(value)
     else setShowFilter(prev => !prev)

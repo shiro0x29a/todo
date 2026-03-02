@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 
 import { useAuthContext } from '../context/AuthContext'
 import { api } from './api'
+import { Task } from '../types'
 
 export function useTasks() {
   const user = useAuthContext()
 
-  const [taskText, setTaskText] = useState('')
-  const [tasks, setTodo] = useState([])
+  const [taskText, setTaskText] = useState<string>('')
+  const [tasks, setTodo] = useState<Task[]>([])
 
   useEffect(() => {
     loadTasks()
@@ -23,8 +24,7 @@ export function useTasks() {
     }
   }
 
-  async function handleSubmit(e) {
-    // e.preventDefault()
+  async function handleSubmit() {
     if (!taskText.trim()) return
 
     try {

@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
 import { api } from './api'
+import { User, AuthMode, AuthContextType } from '../types'
 
 export function useAuth() {
-  const [user, setUser] = useState(null)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [authMode, setAuthMode] = useState('login') // 'login' или 'register'
+  const [user, setUser] = useState<User | null>(null)
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [authMode, setAuthMode] = useState<AuthMode>('login')
 
   async function me() {
     try {
