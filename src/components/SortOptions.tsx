@@ -3,7 +3,6 @@ import { useState } from 'react'
 import styles from '../styles/SortOptions.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import { useTodoContext } from '../context/TodoContext'
-import type { SortType } from '../context/TodoContext'
 
 export default function SortOptions() {
   const { t } = useTranslation();
@@ -13,12 +12,12 @@ export default function SortOptions() {
 
   const handleToggle = () => setShowSort(!showSort)
 
-  const handleSelect = (type: SortType) => {
+  const handleSelect = (type) => {
     setSortBy(type)
     setShowSort(false)
   }
 
-  const sortNameMap: Record<SortType, string> = {
+  const sortNameMap = {
     'created-desc': t('todo.newest'),
     'created-asc': t('todo.oldest'),
     'edited-desc': t('todo.recently-edited'),
