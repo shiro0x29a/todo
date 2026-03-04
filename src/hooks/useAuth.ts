@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { api } from './api'
-import { User, AuthMode } from '../types'
+import { User, UserCreate, AuthMode } from '../types'
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
@@ -26,7 +26,7 @@ export function useAuth() {
   async function handleRegister(e) {
     e.preventDefault()
     try {
-      await api.post('/register', { email, password })
+      await api.post<UserCreate>('/register', { email, password })
       alert('Registration successful! Please log in.')
       setAuthMode('login')
     } catch (err) {
