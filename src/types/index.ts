@@ -1,49 +1,30 @@
 import {
+  FormEvent,
+  MouseEvent,
   Dispatch,
   SetStateAction,
 } from 'react'
 
 
-export type AuthMode = 'login' | 'register'
-
-export interface User {
-  email: string;
-  password: string;
-}
-
-export interface AuthContextType {
-  me: () => Promise<void>
-  user: User | null
-  email: string
-  setEmail: React.Dispatch<React.SetStateAction<string>>
-  password: string
-  setPassword: React.Dispatch<React.SetStateAction<string>>
-  authMode: AuthMode
-  setAuthMode: React.Dispatch<React.SetStateAction<AuthMode>>
-  handleRegister: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
-  handleLogin: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
-  handleLogout: () => void
-}
-
 export interface Task {
   id: string
   text: string
   isCompleted: boolean
-  createdAt: number
-  editedAt?: number
+  created: number
+  edited?: number
 }
 
 export type SortType = 'created-desc' | 'created-asc' | 'edited-desc' | 'edited-asc'
 export type FilterType = 'all' | 'completed' | 'uncompleted'
 
-export interface TodoContextType {
+export interface ITodoContext {
   taskText: string
   setTaskText: Dispatch<SetStateAction<string>>
-  handleSubmit: (e: React.FormEvent) => void
+  handleSubmit: () => void
 
   filter: string
   showFilter: boolean
-  handleFilter: (e: React.MouseEvent<HTMLButtonElement>, value: string) => void
+  handleFilter: (e?: MouseEvent<HTMLButtonElement>, value?: boolean | string) => void
   filterAll: () => void
   filterCompleted: () => void
   filterUncompleted: () => void
@@ -54,7 +35,7 @@ export interface TodoContextType {
   tasks: Task[]
   taskToggle: (id: string) => void
   handleEdit: (id: string, newText: string) => void
-  handleDeleteClick: (task: Task) => void
+  handleDeleteClick: (id: string) => void
 
   currentPage: number
   totalPages: number
@@ -63,5 +44,34 @@ export interface TodoContextType {
   showPopup: boolean
   handleConfirmDelete: () => void
   handleCancelDelete: () => void
+}
+
+export type AuthMode = 'login' | 'register'
+
+interface UserBase {
+  email: string
+}
+
+export interface UserCreate extends UserBase {
+  password: string
+}
+
+export interface User extends UserBase {
+  filter: FilterType | null
+  sortBy: SortType | null
+}
+
+export interface IAuthContext {
+  me: () => Promise<void>
+  user: User | null
+  email: string
+  setEmail: Dispatch<SetStateAction<string>>
+  password: string
+  setPassword: Dispatch<SetStateAction<string>>
+  authMode: AuthMode
+  setAuthMode: Dispatch<SetStateAction<AuthMode>>
+  handleRegister: (e: FormEvent<HTMLFormElement>) => Promise<void>
+  handleLogin: (e: FormEvent<HTMLFormElement>) => Promise<void>
+  handleLogout: () => void
 }
 

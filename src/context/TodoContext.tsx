@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { PropsWithChildren } from 'react';
 
 import { useAuthContext } from '../context/AuthContext'
 
@@ -9,13 +10,19 @@ import { useSortTasks } from '../hooks/useSortTasks'
 import { usePagination } from '../hooks/usePagination'
 import { useDeletePopup } from '../hooks/useDeletePopup'
 
-import { Task, SortType, TodoContextType } from '../types'
+import { Task, SortType, ITodoContext } from '../types'
 
-const TodoContext = createContext<TodoContextType | undefined>(undefined)
+const TodoContext = createContext<ITodoContext | null>(null)
 
-export const useTodoContext = () => useContext(TodoContext)
+export const useTodoContext = () => {
+  const context = useContext(TodoContext)
+  if (!context) {
+    throw new Error('useTodoContext must be used within TodoProvider')
+  }
+  return context
+}
 
-export function TodoProvider({ children }) {
+export function TodoProvider({ children }: PropsWithChildren) {
   const { user } = useAuthContext()
 
   const {
@@ -41,9 +48,10 @@ export function TodoProvider({ children }) {
   const [sortBy, setSortBy] = useState<SortType>('created-desc')
 
   useEffect(() => {
+    if (!user) return
     if (user.filter) setFilter(user.filter)
     if (user.sortBy) setSortBy(user.sortBy)
-  }, [user.filter, user.sortBy])
+  }, [user?.filter, user?.sortBy])
 
   useEffect(() => {
     saveSettings(filter, sortBy)
@@ -61,7 +69,7 @@ export function TodoProvider({ children }) {
     setCurrentPage(1)
   }, [filter])
 
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const [selectedTask, setSelectedTask] = useState<Task['id'] | null>(null)
   const [showPopup, setShowPopup] = useState<boolean>(false)
 
   const {
@@ -76,7 +84,7 @@ export function TodoProvider({ children }) {
     handleDelete
   })
 
-  const value: TodoContextType = {
+  const value: ITodoContext = {
     taskText,
     setTaskText,
     handleSubmit,

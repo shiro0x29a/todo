@@ -43,7 +43,7 @@ export default function TaskList({
 
                 <button
                   className={`${styles.btn} ${styles.edit}`}
-                  onClick={() => handleEdit(task)}
+                  onClick={() => handleEdit(task.id, task.text)}
                 >
                   <i className="fa-solid fa-pen"></i>
                 </button>

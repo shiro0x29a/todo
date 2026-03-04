@@ -53,17 +53,17 @@ export function useTasks() {
     }
   }
 
-  async function handleEdit(task) {
-    const newText = prompt('Enter new description', task.text)
-    if (!newText?.trim()) return
+  async function handleEdit(id, newText) {
+    const text = prompt('Enter new description', newText)
+    if (!text?.trim()) return
 
     try {
-      const updated = await api.put(`/tasks/${task.id}`, {
-        text: newText
+      const updated = await api.put(`/tasks/${id}`, {
+        text: text
       })
 
       setTodo(prev =>
-        prev.map(t => (t.id === task.id ? updated : t))
+        prev.map(t => (t.id === id ? updated : t))
       )
     } catch (err) {
       alert(err.message || 'Error updating task')

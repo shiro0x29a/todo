@@ -3,6 +3,7 @@ import { useState } from 'react'
 import styles from '../styles/SortOptions.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import { useTodoContext } from '../context/TodoContext'
+import { SortType } from '../types'
 
 export default function SortOptions() {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ export default function SortOptions() {
 
   const handleToggle = () => setShowSort(!showSort)
 
-  const handleSelect = (type) => {
+  const handleSelect = (type: SortType) => {
     setSortBy(type)
     setShowSort(false)
   }
@@ -35,7 +36,7 @@ export default function SortOptions() {
           {Object.entries(sortNameMap).map(([key, label]) => (
             <li
               key={key}
-              onClick={() => handleSelect(key)}
+              onClick={() => handleSelect(key as SortType)}
               className={`${styles.sortBy} ${
                 sortBy === key ? styles.active : ''
               }`}

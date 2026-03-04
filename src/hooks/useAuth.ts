@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { api } from './api'
-import { User, AuthMode, AuthContextType } from '../types'
+import { User, AuthMode } from '../types'
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)

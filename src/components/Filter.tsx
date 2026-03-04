@@ -1,6 +1,7 @@
 import styles from '../styles/Filter.module.css'
 import { useTodoContext } from '../context/TodoContext'
 import { useTranslation } from '../hooks/useTranslation'
+import { FilterType } from '../types'
 
 export default function Filter() {
   const { t } = useTranslation();
@@ -20,11 +21,11 @@ export default function Filter() {
     uncompleted: t('todo.only-uncompleted')
   }
 
-  const handleSelect = (type) => {
+  const handleSelect = (type: FilterType) => {
     if (type === 'all') filterAll()
     if (type === 'completed') filterCompleted()
     if (type === 'uncompleted') filterUncompleted()
-    handleFilter(false)
+    handleFilter(undefined, false)
   }
 
   return (
@@ -34,7 +35,7 @@ export default function Filter() {
         onClick={handleFilter}
         className={styles.button}
       >
-        {filterNameMap[filter]} ▼
+        {filterNameMap[filter as keyof typeof filterNameMap]} ▼
       </button>
 
       {showFilter && (
@@ -42,7 +43,7 @@ export default function Filter() {
           {['all', 'completed', 'uncompleted'].map(type => (
             <li
               key={type}
-              onClick={() => handleSelect(type)}
+              onClick={() => handleSelect(type as FilterType)}
               className={`${styles.item} ${
                 filter === type ? styles.active : ''
               }`}
@@ -50,7 +51,7 @@ export default function Filter() {
               {filter === type && (
                 <span className={styles.check}>✔</span>
               )}
-              {filterNameMap[type]}
+              {filterNameMap[type as keyof typeof filterNameMap]}
             </li>
           ))}
         </ul>
