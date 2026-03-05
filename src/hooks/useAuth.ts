@@ -1,10 +1,18 @@
 import { useState } from 'react'
+import { FormEvent } from 'react'
 
 import { api } from './api'
-import { User, UserCreate, AuthMode } from '../types'
+import {
+  UserBase,
+  User,
+  UserRegister,
+  UserLogin,
+  LoginResponse,
+  AuthMode
+} from '../types'
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<UserBase | User | null>(null)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [authMode, setAuthMode] = useState<AuthMode>('login')
@@ -23,26 +31,27 @@ export function useAuth() {
     }
   }
 
-  async function handleRegister(e) {
+  async function handleRegister(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     try {
-      await api.post<UserCreate>('/register', { email, password })
+      await api.post<UserRegister>('/register', { email, password })
       alert('Registration successful! Please log in.')
       setAuthMode('login')
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
       alert(`Registration failed: ${err.message}`)
     }
   }
 
-  async function handleLogin(e) {
+  async function handleLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     try {
-      const res = await api.post('/login', { email, password })
+      const res = await api.post<UserLogin, LoginResponse>('/login', { email, password })
       console.log(res)
       localStorage.setItem('token', res.token)
       setUser({ email: res.email })
-    } catch (err) {
+      // me()
+    } catch (err: any) {
       console.error(err)
       alert(`Login failed: ${err.message}`)
     }

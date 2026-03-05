@@ -48,12 +48,20 @@ export interface ITodoContext {
 
 export type AuthMode = 'login' | 'register'
 
-interface UserBase {
+export interface UserBase {
   email: string
 }
 
-export interface UserCreate extends UserBase {
+export interface UserRegister extends UserBase {
   password: string
+}
+
+export interface UserLogin extends UserBase {
+  password: string
+}
+
+export interface LoginResponse extends UserBase {
+  token: string
 }
 
 export interface User extends UserBase {

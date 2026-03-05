@@ -18,7 +18,7 @@ export function useTasks() {
     try {
       const data = await api.get('/tasks')
       setTodo(data)
-    } catch (err) {
+    } catch (err: any) {
       console.log(err)
       alert(err.message || 'Error loading tasks')
     }
@@ -31,7 +31,7 @@ export function useTasks() {
       const task = await api.post('/tasks', { text: taskText })
       setTodo(prev => [task, ...prev])
       setTaskText('')
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message || 'Error creating task')
     }
   }
@@ -48,7 +48,7 @@ export function useTasks() {
       setTodo(prev =>
         prev.map(t => (t.id === id ? updated : t))
       )
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message || 'Error updating task')
     }
   }
@@ -65,7 +65,7 @@ export function useTasks() {
       setTodo(prev =>
         prev.map(t => (t.id === id ? updated : t))
       )
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message || 'Error updating task')
     }
   }
@@ -74,7 +74,7 @@ export function useTasks() {
     try {
       await api.delete(`/tasks/${id}`)
       setTodo(prev => prev.filter(t => t.id !== id))
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message || 'Error deleting task')
     }
   }
