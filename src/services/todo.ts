@@ -4,6 +4,7 @@ import { TasksSchema, TaskSchema, Task } from "../schemas/todo"
 export const todoService = {
   async getTasks(): Promise<Task[]> {
     const data = await api.get("/tasks")
+    // console.log(data)
     return TasksSchema.parse(data)
   },
 

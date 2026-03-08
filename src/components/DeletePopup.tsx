@@ -1,16 +1,28 @@
 import styles from '../styles/DeletePopup.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+
+import { useTodoStore } from '../store/todo'
+import { useDeleteTask } from '../hooks/useTasks'
 
 export default function DeletePopup({
 }) {
   const { t } = useTranslation();
 
-  const {
-    showPopup,
-    handleConfirmDelete,
-    handleCancelDelete
-  } = useTodoContext()
+  const showPopup = useTodoStore((s) => s.showPopup)
+  const selectedTask = useTodoStore((s) => s.selectedTask)
+  const closeDeletePopup = useTodoStore((s) => s.closeDeletePopup)
+
+  const deleteTask = useDeleteTask()
+
+  const handleConfirmDelete = () => {
+    if (!selectedTask) return
+    deleteTask.mutate(selectedTask)
+    closeDeletePopup()
+  }
+
+  const handleCancelDelete = () => {
+    closeDeletePopup()
+  }
 
   if (!showPopup) return null
 

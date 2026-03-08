@@ -1,15 +1,15 @@
 import styles from '../styles/Pagination.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+
+import { useTodoStore } from '../store/todo'
 
 export default function Pagination({
 }) {
   const { t } = useTranslation();
-  const {
-    currentPage,
-    totalPages,
-    setCurrentPage
-  } = useTodoContext()
+
+  const currentPage = useTodoStore((s) => s.currentPage)
+  const totalPages = useTodoStore((s) => s.totalPages)
+  const setCurrentPage = useTodoStore((s) => s.setCurrentPage)
 
   if (totalPages <= 1) return null
 
@@ -17,7 +17,7 @@ export default function Pagination({
     <div className={styles.pagination}>
       <button
         className={styles.button}
-        onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+        onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
       >
         {t('prev')}
@@ -40,7 +40,7 @@ export default function Pagination({
 
       <button
         className={styles.button}
-        onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+        onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
       >
         {t('next')}

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import styles from '../styles/AuthForm.module.css'
 import { useAuthContext } from '../context/AuthContext'
 

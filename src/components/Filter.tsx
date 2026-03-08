@@ -1,19 +1,25 @@
+import { useState } from 'react'
+
 import styles from '../styles/Filter.module.css'
-import { useTodoContext } from '../context/TodoContext'
 import { useTranslation } from '../hooks/useTranslation'
+
 import { FilterType } from '../types'
+import { useTodoStore } from '../store/todo'
 
 export default function Filter() {
   const { t } = useTranslation();
 
-  const {
-    filter,
-    showFilter,
-    handleFilter,
-    filterAll,
-    filterCompleted,
-    filterUncompleted
-  } = useTodoContext()
+  const filter = useTodoStore((s) => s.filter)
+  const setFilter = useTodoStore((s) => s.setFilter)
+
+  const [showFilter, setShowFilter] = useState(false)
+
+  const handleToggle = () => setShowFilter(!showFilter)
+
+  const handleSelect = (type: FilterType) => {
+    setFilter(type)
+    setShowFilter(false)
+  }
 
   const filterNameMap = {
     all: t('todo.all'),
@@ -21,19 +27,12 @@ export default function Filter() {
     uncompleted: t('todo.only-uncompleted')
   }
 
-  const handleSelect = (type: FilterType) => {
-    if (type === 'all') filterAll()
-    if (type === 'completed') filterCompleted()
-    if (type === 'uncompleted') filterUncompleted()
-    handleFilter(undefined, false)
-  }
-
   return (
     <div className={styles.filterWrapper}>
       <button
-        type="button"
-        onClick={handleFilter}
         className={styles.button}
+        type="button"
+        onClick={handleToggle}
       >
         {filterNameMap[filter as keyof typeof filterNameMap]} ▼
       </button>

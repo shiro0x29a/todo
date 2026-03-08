@@ -2,14 +2,17 @@ import { useState } from 'react'
 
 import styles from '../styles/SortOptions.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+
 import { SortType } from '../types'
+import { useTodoStore } from '../store/todo'
 
 export default function SortOptions() {
   const { t } = useTranslation();
 
-  const { sortBy, setSortBy } = useTodoContext()
-  const [showSort, setShowSort] = useState<boolean>(false)
+  const sortBy = useTodoStore((s) => s.sortBy)
+  const setSortBy = useTodoStore((s) => s.setSortBy)
+
+  const [showSort, setShowSort] = useState(false)
 
   const handleToggle = () => setShowSort(!showSort)
 

@@ -1,22 +1,59 @@
 import styles from '../styles/TaskList.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+// import { useTodoContext } from '../context/TodoContext'
+
 import { Task } from '../types'
+import { useTodoStore } from '../store/todo'
+import {
+  useTasksQuery,
+  useToggleTask,
+  useEditTask,
+} from '../hooks/useTasks'
+import { useSortTasks } from '../hooks/useSortTasks'
+import { usePagination } from '../hooks/usePagination'
 
 export default function TaskList({
 }) {
   const { t } = useTranslation();
-  const {
-    tasks,
-    taskToggle,
-    handleEdit,
-    handleDeleteClick
-  } = useTodoContext()
+
+  const { data: tasks = [] } = useTasksQuery()
+
+  const toggleTask = useToggleTask()
+  const editTask = useEditTask()
+
+  const openDeletePopup = useTodoStore((s) => s.openDeletePopup)
+
+  const handleToggle = (task: Task) => {
+    toggleTask.mutate({
+      id: task.id,
+      isCompleted: !task.isCompleted,
+    })
+  }
+
+  const handleEdit = (task: Task) => {
+    const text = prompt("Enter new description", task.text)
+    if (!text?.trim()) return
+
+    editTask.mutate({
+      id: task.id,
+      text,
+    })
+  }
+
+  const filter = useTodoStore((s) => s.filter)
+  const sortBy = useTodoStore((s) => s.sortBy)
+  const filteredTasks = useSortTasks(tasks, filter, sortBy)
+
+  const tasksPerPage = 5
+  const { itemsForPage: tasksForPage } = usePagination(
+    filteredTasks,
+    tasksPerPage
+  )
 
   return (
     <div className={styles.taskList}>
-      {tasks.length ? (
-        tasks.map((task: Task) => (
+      {tasksForPage.length ? (
+        tasksForPage.map((task: Task) => (
           <div
             key={task.id}
             className={`${styles.task} ${
@@ -28,7 +65,7 @@ export default function TaskList({
                 className={styles.checkbox}
                 type="checkbox"
                 checked={task.isCompleted}
-                onChange={() => taskToggle(task.id)}
+                onChange={() => handleToggle(task)}
               />
 
               <div className={styles.taskText}>{task.text}</div>
@@ -36,14 +73,14 @@ export default function TaskList({
               <div className={styles.taskMenu}>
                 <button
                   className={`${styles.btn} ${styles.delete}`}
-                  onClick={() => handleDeleteClick(task.id)}
+                  onClick={() => openDeletePopup(task.id)}
                 >
                   <i className="fa-solid fa-trash"></i>
                 </button>
 
                 <button
                   className={`${styles.btn} ${styles.edit}`}
-                  onClick={() => handleEdit(task.id, task.text)}
+                  onClick={() => handleEdit(task)}
                 >
                   <i className="fa-solid fa-pen"></i>
                 </button>

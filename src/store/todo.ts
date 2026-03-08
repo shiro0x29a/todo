@@ -6,9 +6,12 @@ type SortType = "created-desc" | "created-asc"
 import { FilterType, SortType } from '../types'
 
 interface TodoStore {
+  taskText: string
+  setTaskText: (text: string) => void
+
   filter: FilterType
   sortBy: SortType
-  currentPage: number
+
   selectedTask: string | null
   showPopup: boolean
 
@@ -18,12 +21,20 @@ interface TodoStore {
 
   openDeletePopup: (id: string) => void
   closeDeletePopup: () => void
+
+  currentPage: number
+  setCurrentPage: (page: number) => void
+  totalPages: number
+  setTotalPages: (pages: number) => void
 }
 
 export const useTodoStore = create<TodoStore>((set) => ({
+  taskText: "",
+  setTaskText: (text) =>
+    set({ taskText: text }),
+
   filter: "all",
   sortBy: "created-desc",
-  currentPage: 1,
 
   selectedTask: null,
   showPopup: false,
@@ -47,5 +58,11 @@ export const useTodoStore = create<TodoStore>((set) => ({
     set({
       selectedTask: null,
       showPopup: false
-    })
+    }),
+
+  currentPage: 1,
+  totalPages: 1,
+
+  setCurrentPage: (page) => set({ currentPage: page }),
+  setTotalPages: (pages) => set({ totalPages: pages }),
 }))

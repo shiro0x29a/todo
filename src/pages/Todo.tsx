@@ -1,5 +1,3 @@
-import { TodoProvider } from '../context/TodoContext';
-
 import Header from '../components/Header'
 import TaskForm from '../components/TaskForm'
 import Filter from '../components/Filter'
@@ -12,7 +10,6 @@ import styles from '../styles/Todo.module.css'
 
 export default function Todo() {
   return (
-    <TodoProvider>
       <div className={styles.todo}>
       <Header />
 
@@ -36,6 +33,5 @@ export default function Todo() {
       <DeletePopup
       />
       </div>
-    </TodoProvider>
   )
 }

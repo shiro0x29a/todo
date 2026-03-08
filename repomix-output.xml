@@ -76,6 +76,7 @@ src/
   context/
     AuthContext.tsx
     LangContext.tsx
+    QueryContext.tsx
     ThemeContext.tsx
     TodoContext.tsx
   hooks/
@@ -120,7 +121,7 @@ src/
     css.d.ts
     index.ts
   App.css
-  App.jsx
+  App.tsx
   i18n.ts
   index.css
   main.tsx
@@ -137,6 +138,77 @@ vite.config.ts
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="src/context/QueryContext.tsx">
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactNode } from "react"
+
+const queryClient = new QueryClient()
+
+export default function ReactQueryProvider({ children }: { children: ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
+  )
+}
+</file>
+
+<file path="src/App.tsx">
+import { Routes, Route, Navigate } from 'react-router-dom'
+
+import './App.css'
+
+import { useAuthContext } from './context/AuthContext'
+import AuthProvider from './context/AuthContext'
+import ReactQueryProvider from './context/QueryContext'
+import ThemeProvider from './context/ThemeContext'
+import LangProvider from './context/LangContext'
+
+import Auth from './pages/Auth'
+import Todo from './pages/Todo'
+
+function App() {
+  const { user } = useAuthContext()
+
+  return (
+    <Routes>
+      <Route
+        path="/auth"
+        element={!user ? <Auth /> : <Navigate to="/" replace />}
+      />
+
+      <Route
+        path="/"
+        element={user ? <Todo /> : <Navigate to="/auth" replace />}
+      />
+    </Routes>
+  )
+}
+
+function composeProviders(...providers) {
+  return ({ children }) => 
+    providers.reduce(
+      (acc, Provider) => <Provider>{acc}</Provider>,
+      children
+    )
+}
+
+export const AllProviders = composeProviders(
+  AuthProvider,
+  ReactQueryProvider,
+  ThemeProvider,
+  LangProvider,
+)
+
+export default () => {
+  return (
+    <AllProviders>
+      <App />
+    </AllProviders>
+  )
+}
+</file>
 
 <file path="api/controllers/auth.controller.js">
 const bcrypt = require('bcryptjs')
@@ -492,17 +564,29 @@ module.exports = { pool };
 <file path="src/components/DeletePopup.tsx">
 import styles from '../styles/DeletePopup.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+
+import { useTodoStore } from '../store/todo'
+import { useDeleteTask } from '../hooks/useTasks'
 
 export default function DeletePopup({
 }) {
   const { t } = useTranslation();
 
-  const {
-    showPopup,
-    handleConfirmDelete,
-    handleCancelDelete
-  } = useTodoContext()
+  const showPopup = useTodoStore((s) => s.showPopup)
+  const selectedTask = useTodoStore((s) => s.selectedTask)
+  const closeDeletePopup = useTodoStore((s) => s.closeDeletePopup)
+
+  const deleteTask = useDeleteTask()
+
+  const handleConfirmDelete = () => {
+    if (!selectedTask) return
+    deleteTask.mutate(selectedTask)
+    closeDeletePopup()
+  }
+
+  const handleCancelDelete = () => {
+    closeDeletePopup()
+  }
 
   if (!showPopup) return null
 
@@ -599,16 +683,16 @@ export default LanguageSwitcher
 <file path="src/components/Pagination.tsx">
 import styles from '../styles/Pagination.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+
+import { useTodoStore } from '../store/todo'
 
 export default function Pagination({
 }) {
   const { t } = useTranslation();
-  const {
-    currentPage,
-    totalPages,
-    setCurrentPage
-  } = useTodoContext()
+
+  const currentPage = useTodoStore((s) => s.currentPage)
+  const totalPages = useTodoStore((s) => s.totalPages)
+  const setCurrentPage = useTodoStore((s) => s.setCurrentPage)
 
   if (totalPages <= 1) return null
 
@@ -616,7 +700,7 @@ export default function Pagination({
     <div className={styles.pagination}>
       <button
         className={styles.button}
-        onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+        onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
       >
         {t('prev')}
@@ -639,7 +723,7 @@ export default function Pagination({
 
       <button
         className={styles.button}
-        onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+        onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
       >
         {t('next')}
@@ -651,9 +735,13 @@ export default function Pagination({
 
 <file path="src/components/TaskForm.tsx">
 import { ReactNode } from 'react'
+
 import styles from '../styles/TaskForm.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import { useTodoContext } from '../context/TodoContext'
+
+import { useTodoStore } from '../store/todo'
+import { useCreateTask } from '../hooks/useTasks'
 
 interface TaskFormProps {
   SortOptions: ReactNode
@@ -665,11 +753,18 @@ function TaskForm({
   Filter
 }: TaskFormProps) {
   const { t } = useTranslation();
-  const {
-    taskText,
-    setTaskText,
-    handleSubmit,
-  } = useTodoContext()
+
+  const taskText = useTodoStore((s) => s.taskText)
+  const setTaskText = useTodoStore((s) => s.setTaskText)
+
+  const createTask = useCreateTask()
+
+  const handleSubmit = () => {
+    if (!taskText.trim()) return
+
+    createTask.mutate(taskText)
+    setTaskText('')
+  }
 
   return (
     <form
@@ -869,8 +964,6 @@ export function useSortTasks(tasks: Task[], filter: string, sortBy: SortType) {
 </file>
 
 <file path="src/pages/Auth.tsx">
-import React from 'react'
-
 import styles from '../styles/AuthForm.module.css'
 import { useAuthContext } from '../context/AuthContext'
 
@@ -923,8 +1016,6 @@ export default function Auth() {
 </file>
 
 <file path="src/pages/Todo.tsx">
-import { TodoProvider } from '../context/TodoContext';
-
 import Header from '../components/Header'
 import TaskForm from '../components/TaskForm'
 import Filter from '../components/Filter'
@@ -937,7 +1028,6 @@ import styles from '../styles/Todo.module.css'
 
 export default function Todo() {
   return (
-    <TodoProvider>
       <div className={styles.todo}>
       <Header />
 
@@ -961,7 +1051,6 @@ export default function Todo() {
       <DeletePopup
       />
       </div>
-    </TodoProvider>
   )
 }
 </file>
@@ -970,10 +1059,11 @@ export default function Todo() {
 import { z } from "zod"
 
 export const TaskSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   text: z.string(),
   isCompleted: z.boolean(),
-  createdAt: z.string()
+  created: z.string(),
+  edited: z.string().nullable()
 })
 
 export const TasksSchema = z.array(TaskSchema)
@@ -1228,6 +1318,7 @@ import { TasksSchema, TaskSchema, Task } from "../schemas/todo"
 export const todoService = {
   async getTasks(): Promise<Task[]> {
     const data = await api.get("/tasks")
+    // console.log(data)
     return TasksSchema.parse(data)
   },
 
@@ -1264,9 +1355,12 @@ type SortType = "created-desc" | "created-asc"
 import { FilterType, SortType } from '../types'
 
 interface TodoStore {
+  taskText: string
+  setTaskText: (text: string) => void
+
   filter: FilterType
   sortBy: SortType
-  currentPage: number
+
   selectedTask: string | null
   showPopup: boolean
 
@@ -1276,12 +1370,20 @@ interface TodoStore {
 
   openDeletePopup: (id: string) => void
   closeDeletePopup: () => void
+
+  currentPage: number
+  setCurrentPage: (page: number) => void
+  totalPages: number
+  setTotalPages: (pages: number) => void
 }
 
 export const useTodoStore = create<TodoStore>((set) => ({
+  taskText: "",
+  setTaskText: (text) =>
+    set({ taskText: text }),
+
   filter: "all",
   sortBy: "created-desc",
-  currentPage: 1,
 
   selectedTask: null,
   showPopup: false,
@@ -1305,7 +1407,13 @@ export const useTodoStore = create<TodoStore>((set) => ({
     set({
       selectedTask: null,
       showPopup: false
-    })
+    }),
+
+  currentPage: 1,
+  totalPages: 1,
+
+  setCurrentPage: (page) => set({ currentPage: page }),
+  setTotalPages: (pages) => set({ totalPages: pages }),
 }))
 </file>
 
@@ -1704,22 +1812,28 @@ export default defineConfig({
 </file>
 
 <file path="src/components/Filter.tsx">
+import { useState } from 'react'
+
 import styles from '../styles/Filter.module.css'
-import { useTodoContext } from '../context/TodoContext'
 import { useTranslation } from '../hooks/useTranslation'
+
 import { FilterType } from '../types'
+import { useTodoStore } from '../store/todo'
 
 export default function Filter() {
   const { t } = useTranslation();
 
-  const {
-    filter,
-    showFilter,
-    handleFilter,
-    filterAll,
-    filterCompleted,
-    filterUncompleted
-  } = useTodoContext()
+  const filter = useTodoStore((s) => s.filter)
+  const setFilter = useTodoStore((s) => s.setFilter)
+
+  const [showFilter, setShowFilter] = useState(false)
+
+  const handleToggle = () => setShowFilter(!showFilter)
+
+  const handleSelect = (type: FilterType) => {
+    setFilter(type)
+    setShowFilter(false)
+  }
 
   const filterNameMap = {
     all: t('todo.all'),
@@ -1727,19 +1841,12 @@ export default function Filter() {
     uncompleted: t('todo.only-uncompleted')
   }
 
-  const handleSelect = (type: FilterType) => {
-    if (type === 'all') filterAll()
-    if (type === 'completed') filterCompleted()
-    if (type === 'uncompleted') filterUncompleted()
-    handleFilter(undefined, false)
-  }
-
   return (
     <div className={styles.filterWrapper}>
       <button
-        type="button"
-        onClick={handleFilter}
         className={styles.button}
+        type="button"
+        onClick={handleToggle}
       >
         {filterNameMap[filter as keyof typeof filterNameMap]} ▼
       </button>
@@ -1770,23 +1877,60 @@ export default function Filter() {
 <file path="src/components/TaskList.tsx">
 import styles from '../styles/TaskList.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+// import { useTodoContext } from '../context/TodoContext'
+
 import { Task } from '../types'
+import { useTodoStore } from '../store/todo'
+import {
+  useTasksQuery,
+  useToggleTask,
+  useEditTask,
+} from '../hooks/useTasks'
+import { useSortTasks } from '../hooks/useSortTasks'
+import { usePagination } from '../hooks/usePagination'
 
 export default function TaskList({
 }) {
   const { t } = useTranslation();
-  const {
-    tasks,
-    taskToggle,
-    handleEdit,
-    handleDeleteClick
-  } = useTodoContext()
+
+  const { data: tasks = [] } = useTasksQuery()
+
+  const toggleTask = useToggleTask()
+  const editTask = useEditTask()
+
+  const openDeletePopup = useTodoStore((s) => s.openDeletePopup)
+
+  const handleToggle = (task: Task) => {
+    toggleTask.mutate({
+      id: task.id,
+      isCompleted: !task.isCompleted,
+    })
+  }
+
+  const handleEdit = (task: Task) => {
+    const text = prompt("Enter new description", task.text)
+    if (!text?.trim()) return
+
+    editTask.mutate({
+      id: task.id,
+      text,
+    })
+  }
+
+  const filter = useTodoStore((s) => s.filter)
+  const sortBy = useTodoStore((s) => s.sortBy)
+  const filteredTasks = useSortTasks(tasks, filter, sortBy)
+
+  const tasksPerPage = 5
+  const { itemsForPage: tasksForPage } = usePagination(
+    filteredTasks,
+    tasksPerPage
+  )
 
   return (
     <div className={styles.taskList}>
-      {tasks.length ? (
-        tasks.map((task: Task) => (
+      {tasksForPage.length ? (
+        tasksForPage.map((task: Task) => (
           <div
             key={task.id}
             className={`${styles.task} ${
@@ -1798,7 +1942,7 @@ export default function TaskList({
                 className={styles.checkbox}
                 type="checkbox"
                 checked={task.isCompleted}
-                onChange={() => taskToggle(task.id)}
+                onChange={() => handleToggle(task)}
               />
 
               <div className={styles.taskText}>{task.text}</div>
@@ -1806,14 +1950,14 @@ export default function TaskList({
               <div className={styles.taskMenu}>
                 <button
                   className={`${styles.btn} ${styles.delete}`}
-                  onClick={() => handleDeleteClick(task.id)}
+                  onClick={() => openDeletePopup(task.id)}
                 >
                   <i className="fa-solid fa-trash"></i>
                 </button>
 
                 <button
                   className={`${styles.btn} ${styles.edit}`}
-                  onClick={() => handleEdit(task.id, task.text)}
+                  onClick={() => handleEdit(task)}
                 >
                   <i className="fa-solid fa-pen"></i>
                 </button>
@@ -1890,7 +2034,7 @@ import { PropsWithChildren } from 'react';
 
 import { useAuthContext } from '../context/AuthContext'
 
-import { useTasks } from '../hooks/useTasks'
+// import { useTasks } from '../hooks/useTasks'
 import { useFilters } from '../hooks/useFilters'
 import { saveSettings } from '../hooks/SaveSettings'
 import { useSortTasks } from '../hooks/useSortTasks'
@@ -2202,18 +2346,26 @@ export function useFilters() {
 </file>
 
 <file path="src/hooks/usePagination.ts">
-import { useState } from 'react'
+import { useMemo } from 'react'
 
-export function usePagination(items, currentPage, setCurrentPage, perPage = 5) {
-  const indexOfLastTask = currentPage * perPage
-  const indexOfFirstTask = indexOfLastTask - perPage
-  const getTasksForPage = items.slice(indexOfFirstTask, indexOfLastTask)
+import { useTodoStore } from '../store/todo'
+
+export function usePagination(items: any[], perPage = 5) {
+  const currentPage = useTodoStore(s => s.currentPage)
+  const setCurrentPage = useTodoStore(s => s.setCurrentPage)
+  const setTotalPages = useTodoStore(s => s.setTotalPages)
 
   const totalPages = Math.ceil(items.length / perPage)
+  setTotalPages(totalPages)
+
+  const itemsForPage = useMemo(() => {
+    const indexOfLast = currentPage * perPage
+    const indexOfFirst = indexOfLast - perPage
+    return items.slice(indexOfFirst, indexOfLast)
+  }, [items, currentPage, perPage])
 
   return {
-    getTasksForPage,
-    totalPages
+    itemsForPage
   }
 }
 </file>
@@ -2546,14 +2698,17 @@ import { useState } from 'react'
 
 import styles from '../styles/SortOptions.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useTodoContext } from '../context/TodoContext'
+
 import { SortType } from '../types'
+import { useTodoStore } from '../store/todo'
 
 export default function SortOptions() {
   const { t } = useTranslation();
 
-  const { sortBy, setSortBy } = useTodoContext()
-  const [showSort, setShowSort] = useState<boolean>(false)
+  const sortBy = useTodoStore((s) => s.sortBy)
+  const setSortBy = useTodoStore((s) => s.setSortBy)
+
+  const [showSort, setShowSort] = useState(false)
 
   const handleToggle = () => setShowSort(!showSort)
 
@@ -3358,7 +3513,8 @@ export function useDeleteTask() {
     "react-dom": "^18.2.0",
     "react-i18next": "^16.5.4",
     "react-router-dom": "^7.13.0",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@types/node": "^25.3.3",
@@ -3387,60 +3543,6 @@ button {
   flex-direction: column;
   margin: 100px auto;
   border-radius: 20px;
-}
-</file>
-
-<file path="src/App.jsx">
-import { Routes, Route, Navigate } from 'react-router-dom'
-
-import './App.css'
-
-import { useAuthContext } from './context/AuthContext'
-import AuthProvider from './context/AuthContext'
-import ThemeProvider from './context/ThemeContext'
-import LangProvider from './context/LangContext'
-
-import Auth from './pages/Auth'
-import Todo from './pages/Todo'
-
-function App() {
-  const { user } = useAuthContext()
-
-  return (
-    <Routes>
-      <Route
-        path="/auth"
-        element={!user ? <Auth /> : <Navigate to="/" replace />}
-      />
-
-      <Route
-        path="/"
-        element={user ? <Todo /> : <Navigate to="/auth" replace />}
-      />
-    </Routes>
-  )
-}
-
-function composeProviders(...providers) {
-  return ({ children }) => 
-    providers.reduce(
-      (acc, Provider) => <Provider>{acc}</Provider>,
-      children
-    )
-}
-
-export const AllProviders = composeProviders(
-  AuthProvider,
-  ThemeProvider,
-  LangProvider,
-)
-
-export default () => {
-  return (
-    <AllProviders>
-      <App />
-    </AllProviders>
-  )
 }
 </file>
 

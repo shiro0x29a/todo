@@ -1,7 +1,11 @@
 import { ReactNode } from 'react'
+
 import styles from '../styles/TaskForm.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import { useTodoContext } from '../context/TodoContext'
+
+import { useTodoStore } from '../store/todo'
+import { useCreateTask } from '../hooks/useTasks'
 
 interface TaskFormProps {
   SortOptions: ReactNode
@@ -13,11 +17,18 @@ function TaskForm({
   Filter
 }: TaskFormProps) {
   const { t } = useTranslation();
-  const {
-    taskText,
-    setTaskText,
-    handleSubmit,
-  } = useTodoContext()
+
+  const taskText = useTodoStore((s) => s.taskText)
+  const setTaskText = useTodoStore((s) => s.setTaskText)
+
+  const createTask = useCreateTask()
+
+  const handleSubmit = () => {
+    if (!taskText.trim()) return
+
+    createTask.mutate(taskText)
+    setTaskText('')
+  }
 
   return (
     <form
