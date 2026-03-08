@@ -1,91 +1,84 @@
-import { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { useAuthContext } from '../context/AuthContext'
-import { api } from './api'
-import { Task } from '../types'
+import { todoService } from '../services/todo'
+import { Task } from '../schemas/todo'
 
-export function useTasks() {
-  const user = useAuthContext()
+export const todoKeys = {
+  all: ['tasks'] as const,
+  detail: (id: Task['id']) => ['tasks', id] as const,
+}
 
-  const [taskText, setTaskText] = useState<string>('')
-  const [tasks, setTodo] = useState<Task[]>([])
+export function useTasksQuery() {
+  return useQuery({
+    queryKey: todoKeys.all,
+    queryFn: todoService.getTasks,
+  })
+}
 
-  useEffect(() => {
-    loadTasks()
-  }, [user])
+export function useCreateTask() {
+  const queryClient = useQueryClient()
 
-  async function loadTasks() {
-    try {
-      const data = await api.get('/tasks')
-      setTodo(data)
-    } catch (err: any) {
-      console.log(err)
-      alert(err.message || 'Error loading tasks')
-    }
-  }
+  return useMutation({
+    mutationFn: (text: string) => todoService.createTask(text),
 
-  async function handleSubmit() {
-    if (!taskText.trim()) return
-
-    try {
-      const task = await api.post('/tasks', { text: taskText })
-      setTodo(prev => [task, ...prev])
-      setTaskText('')
-    } catch (err: any) {
-      alert(err.message || 'Error creating task')
-    }
-  }
-
-  async function taskToggle(id) {
-    const task = tasks.find(t => t.id === id)
-    if (!task) return
-
-    try {
-      const updated = await api.put(`/tasks/${id}`, {
-        isCompleted: !task.isCompleted
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: todoKeys.all,
       })
+    },
+  })
+}
 
-      setTodo(prev =>
-        prev.map(t => (t.id === id ? updated : t))
-      )
-    } catch (err: any) {
-      alert(err.message || 'Error updating task')
-    }
-  }
+export function useToggleTask() {
+  const queryClient = useQueryClient()
 
-  async function handleEdit(id, newText) {
-    const text = prompt('Enter new description', newText)
-    if (!text?.trim()) return
+  return useMutation({
+    mutationFn: ({
+      id,
+      isCompleted,
+    }: {
+      id: string
+      isCompleted: boolean
+    }) => todoService.toggleTask(id, isCompleted),
 
-    try {
-      const updated = await api.put(`/tasks/${id}`, {
-        text: text
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: todoKeys.all,
       })
+    },
+  })
+}
 
-      setTodo(prev =>
-        prev.map(t => (t.id === id ? updated : t))
-      )
-    } catch (err: any) {
-      alert(err.message || 'Error updating task')
-    }
-  }
+export function useEditTask() {
+  const queryClient = useQueryClient()
 
-  async function handleDelete(id) {
-    try {
-      await api.delete(`/tasks/${id}`)
-      setTodo(prev => prev.filter(t => t.id !== id))
-    } catch (err: any) {
-      alert(err.message || 'Error deleting task')
-    }
-  }
+  return useMutation({
+    mutationFn: ({
+      id,
+      text,
+    }: {
+      id: string
+      text: string
+    }) => todoService.editTask(id, text),
 
-  return {
-    taskText,
-    setTaskText,
-    tasks,
-    handleSubmit,
-    taskToggle,
-    handleEdit,
-    handleDelete
-  }
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: todoKeys.all,
+      })
+    },
+  })
+}
+
+export function useDeleteTask() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: string) => todoService.deleteTask(id),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: todoKeys.all,
+      })
+    },
+  })
 }
