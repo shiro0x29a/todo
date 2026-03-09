@@ -1,12 +1,18 @@
+import { useEffect } from 'react'
+
 import styles from '../styles/TaskList.module.css'
+import { useAuthContext } from '../context/AuthContext'
 import { useTranslation } from '../hooks/useTranslation'
+
+import TaskItem from './TaskItem'
 import { useTasksQuery } from '../hooks/useTasks'
 import { useSortTasks } from '../hooks/useSortTasks'
 import { usePagination } from '../hooks/usePagination'
 import { useTodoStore } from '../store/todo'
-import TaskItem from './TaskItem'
+import { saveSettings } from '../hooks/SaveSettings'
 
 export default function TaskList() {
+  const { user } = useAuthContext()
   const { t } = useTranslation()
   const { data: tasks = [] } = useTasksQuery()
 
@@ -16,6 +22,19 @@ export default function TaskList() {
 
   const tasksPerPage = 5
   const { itemsForPage: tasksForPage } = usePagination(filteredTasks, tasksPerPage)
+
+  const setSortBy = useTodoStore((s) => s.setSortBy)
+  const setFilter = useTodoStore((s) => s.setFilter)
+
+  useEffect(() => {
+    if (!user) return
+    if (user.filter) setFilter(user.filter)
+    if (user.sortBy) setSortBy(user.sortBy)
+  }, [user?.filter, user?.sortBy])
+
+  useEffect(() => {
+    saveSettings(filter, sortBy)
+  }, [filter, sortBy])
 
   return (
     <div className={styles.taskList}>

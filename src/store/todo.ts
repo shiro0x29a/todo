@@ -1,8 +1,5 @@
 import { create } from "zustand"
 
-type Filter = "all" | "completed" | "uncompleted"
-type SortType = "created-desc" | "created-asc"
-
 import { FilterType, SortType } from '../types'
 
 interface TodoStore {
