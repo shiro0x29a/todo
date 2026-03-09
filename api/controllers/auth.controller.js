@@ -13,7 +13,9 @@ exports.register = async (req, res) => {
 
   const passwordHash = await bcrypt.hash(password, 10)
   await User.create(email, passwordHash)
-  res.json({ message: 'User registered successfully' })
+
+  const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: '1h' })
+  res.json({ token, email })
 }
 
 exports.login = async (req, res) => {

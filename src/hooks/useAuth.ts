@@ -1,78 +1,54 @@
-import { useState } from 'react'
-import { FormEvent } from 'react'
+import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query'
 
-import { api } from '../services/api'
-import {
-  UserBase,
-  User,
-  UserRegister,
-  UserLogin,
-  LoginResponse,
-  AuthMode
-} from '../types'
+import { User, AccessToken } from '../schemas/auth'
+import { authService } from '../services/auth'
+import { useAuthStore } from '../store/auth'
 
-export function useAuth() {
-  const [user, setUser] = useState<UserBase | User | null>(null)
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [authMode, setAuthMode] = useState<AuthMode>('login')
+export function useLogin() {
+  const setUser = useAuthStore((s) => s.setUser)
 
-  async function me() {
-    try {
-      const token = localStorage.getItem('token')
-      if (!token) return
-
-      const data = await api.get('/me')
-      setUser(data)
-      console.log(user)
-    } catch {
-      localStorage.removeItem('token')
-      setUser(null)
-    }
-  }
-
-  async function handleRegister(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    try {
-      await api.post<UserRegister>('/register', { email, password })
-      alert('Registration successful! Please log in.')
-      setAuthMode('login')
-    } catch (err: any) {
+  return useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      authService.login(email, password),
+    onSuccess: (user: AccessToken) => {
+      localStorage.setItem('token', user.token ?? '')
+      setUser(user)
+    },
+    onError: (err: any) => {
       console.error(err)
-      alert(`Registration failed: ${err.message}`)
     }
-  }
+  })
+}
 
-  async function handleLogin(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    try {
-      const res = await api.post<UserLogin, LoginResponse>('/login', { email, password })
-      console.log(res)
-      localStorage.setItem('token', res.token)
-      setUser({ email: res.email })
-      // me()
-    } catch (err: any) {
+export function useRegister() {
+  const setUser = useAuthStore((s) => s.setUser)
+
+  return useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      authService.register(email, password),
+    onSuccess: (user: AccessToken) => {
+      localStorage.setItem('token', user.token ?? '')
+      setUser(user)
+    },
+    onError: (err: any) => {
       console.error(err)
-      alert(`Login failed: ${err.message}`)
     }
-  }
+  })
+}
 
-  function handleLogout() {
-    localStorage.removeItem('token')
-    setUser(null)
-  }
+export function useMe() {
+  const setUser = useAuthStore((s) => s.setUser)
 
-  return {
-    me,
-    user,
-    email,
-    setEmail,
-    password,
-    setPassword,
-    authMode,
-    setAuthMode,
-    handleRegister,
-    handleLogin,
-    handleLogout
-  }
+  return useQuery<User, Error>({
+    queryKey: ['me'],
+    queryFn: async () => {
+      const user: User = await authService.me()
+      setUser(user)
+      return user
+    },
+    enabled: !!localStorage.getItem('token'),
+    onError: (err: any) => {
+      console.error(err)
+    }
+  } as UseQueryOptions<User, Error>)
 }

@@ -1,9 +1,11 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 
 import './App.css'
 
-import { useAuthContext } from './context/AuthContext'
-import AuthProvider from './context/AuthContext'
+import { useAuthStore } from './store/auth'
+import { useMe } from './hooks/useAuth'
+
 import ReactQueryProvider from './context/QueryContext'
 import ThemeProvider from './context/ThemeContext'
 import LangProvider from './context/LangContext'
@@ -12,19 +14,26 @@ import Auth from './pages/Auth'
 import Todo from './pages/Todo'
 
 function App() {
-  const { user } = useAuthContext()
+  const { user, setUser } = useAuthStore()
+  const { data, isLoading } = useMe()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (data) setUser(data)
+  }, [data, setUser])
+
+  useEffect(() => {
+    if (isLoading) return
+    if (user) navigate('/', { replace: true })
+    else navigate('/auth', { replace: true })
+  }, [user, isLoading, navigate])
+
+  if (isLoading) return <div></div>
 
   return (
     <Routes>
-      <Route
-        path="/auth"
-        element={!user ? <Auth /> : <Navigate to="/" replace />}
-      />
-
-      <Route
-        path="/"
-        element={user ? <Todo /> : <Navigate to="/auth" replace />}
-      />
+      <Route path="/" element={<Todo />} />
+      <Route path="/auth" element={<Auth />} />
     </Routes>
   )
 }
@@ -38,7 +47,6 @@ function composeProviders(...providers) {
 }
 
 export const AllProviders = composeProviders(
-  AuthProvider,
   ReactQueryProvider,
   ThemeProvider,
   LangProvider,

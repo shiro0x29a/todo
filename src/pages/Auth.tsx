@@ -1,23 +1,31 @@
+import { useState, FormEvent } from 'react'
+
 import styles from '../styles/AuthForm.module.css'
-import { useAuthContext } from '../context/AuthContext'
+import { useLogin, useRegister } from '../hooks/useAuth'
 
 export default function Auth() {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    authMode,
-    setAuthMode,
-    handleLogin,
-    handleRegister
-  } = useAuthContext()
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const login = useLogin()
+  const register = useRegister()
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    try {
+      if (authMode === 'login') await login.mutateAsync({ email, password })
+      else await register.mutateAsync({ email, password })
+    } catch (err: any) {
+      alert(err.message || 'Something went wrong')
+    }
+  }
 
   return (
     <div className={styles.authForm}>
       <h2>{authMode === 'login' ? 'Login' : 'Register'}</h2>
 
-      <form onSubmit={authMode === 'login' ? handleLogin : handleRegister}>
+      <form onSubmit={handleSubmit}>
         <input 
           type="email" 
           placeholder="Email" 

@@ -1,16 +1,26 @@
+import { useNavigate } from 'react-router-dom'
+
 import styles from '../styles/Header.module.css'
 import { useTranslation } from '../hooks/useTranslation'
-import { useAuthContext } from '../context/AuthContext'
 import ThemeSwitcher from './ThemeSwitcher'
 import LangSwitcher from './LangSwitcher'
+import { useAuthStore } from '../store/auth'
 
 export default function Header() {
   const { t } = useTranslation();
-  const { user, handleLogout } = useAuthContext()
+
+  const user = useAuthStore((s) => s.user)
+  const logout = useAuthStore((s) => s.logout)
+  // const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    // navigate('/auth', { replace: true })
+  }
 
   return (
     <div className={styles.header}>
-      <span>{user.email}</span>
+      <span>{user?.email}</span>
       <div className={styles.headerRight}>
         <ThemeSwitcher />
         <LangSwitcher />

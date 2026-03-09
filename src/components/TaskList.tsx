@@ -1,18 +1,20 @@
 import { useEffect } from 'react'
 
 import styles from '../styles/TaskList.module.css'
-import { useAuthContext } from '../context/AuthContext'
 import { useTranslation } from '../hooks/useTranslation'
 
 import TaskItem from './TaskItem'
+import { useAuthStore } from '../store/auth'
+import { useTodoStore } from '../store/todo'
+
 import { useTasksQuery } from '../hooks/useTasks'
 import { useSortTasks } from '../hooks/useSortTasks'
 import { usePagination } from '../hooks/usePagination'
-import { useTodoStore } from '../store/todo'
 import { saveSettings } from '../hooks/SaveSettings'
 
 export default function TaskList() {
-  const { user } = useAuthContext()
+  const user = useAuthStore((s) => s.user)
+
   const { t } = useTranslation()
   const { data: tasks = [] } = useTasksQuery()
 
