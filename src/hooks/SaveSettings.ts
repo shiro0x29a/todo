@@ -1,4 +1,4 @@
-import { api } from '../hooks/api'
+import { api } from '../services/api'
 
 export async function saveSettings(filter, sortBy) {
   try {

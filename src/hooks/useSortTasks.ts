@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
-import type { Task, SortType } from '../context/TodoContext'
 
-export function useSortTasks(tasks: Task[], filter: string, sortBy: SortType) {
+import { Task, FilterType, SortType } from '../types'
+
+export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType) {
   return useMemo(() => {
     const filtered = tasks.filter(task => {
       if (filter === 'completed') return task.isCompleted
