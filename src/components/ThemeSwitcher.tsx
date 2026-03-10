@@ -3,7 +3,7 @@ import styles from '../styles/ThemeSwitcher.module.css'
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
-  const themeIcons = {
+  const themeIcons: Record<string, string> = {
     system: '💻',
     light: '☀',
     dark: '🌙'

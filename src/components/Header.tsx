@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom'
-
 import styles from '../styles/Header.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 import ThemeSwitcher from './ThemeSwitcher'
@@ -11,12 +9,6 @@ export default function Header() {
 
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
-  // const navigate = useNavigate()
-
-  const handleLogout = () => {
-    logout()
-    // navigate('/auth', { replace: true })
-  }
 
   return (
     <div className={styles.header}>
@@ -24,7 +16,7 @@ export default function Header() {
       <div className={styles.headerRight}>
         <ThemeSwitcher />
         <LangSwitcher />
-        <button onClick={handleLogout}>{t('logout')}</button>
+        <button onClick={logout}>{t('logout')}</button>
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ import { api } from './api'
 import { User, UserSchema, AccessToken, AccessTokenSchema } from '../schemas/auth'
 
 export const authService = {
-  async login(email: string, password: string): Promise<User> {
+  async login(email: string, password: string): Promise<AccessToken> {
     const data = await api.post('/login', { email, password })
     console.log(data)
     return AccessTokenSchema.parse(data)

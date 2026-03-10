@@ -38,15 +38,17 @@ function App() {
   )
 }
 
-function composeProviders(...providers) {
-  return ({ children }) => 
+function composeProviders(
+  ...providers: (({ children }: { children: React.ReactNode }) => React.ReactNode)[]
+) {
+  return ({ children }: { children: React.ReactNode }) =>
     providers.reduce(
       (acc, Provider) => <Provider>{acc}</Provider>,
       children
     )
 }
 
-export const AllProviders = composeProviders(
+const AllProviders = composeProviders(
   ReactQueryProvider,
   ThemeProvider,
   LangProvider,

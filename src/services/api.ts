@@ -62,7 +62,7 @@ apiClient.interceptors.response.use(
  * @param options - Дополнительные опции для axios
  * @returns Promise с результатом запроса
  */
-export const makeRequest = async <TRequest = any, TResponse = any>(
+const makeRequest = async <TRequest = any, TResponse = any>(
   method: string,
   url: string,
   data?: TRequest | null,

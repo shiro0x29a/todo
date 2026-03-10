@@ -1,6 +1,8 @@
+import { FilterType, SortType } from '../types'
+
 import { api } from '../services/api'
 
-export async function saveSettings(filter, sortBy) {
+export async function saveSettings(filter: FilterType, sortBy: SortType) {
   try {
     await api.put(
       '/me/settings',

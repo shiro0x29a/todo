@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
-import { Task, FilterType, SortType } from '../types'
+import { Task } from '../schemas/todo'
+import { FilterType, SortType } from '../types'
 
 export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType) {
   return useMemo(() => {
@@ -11,7 +12,7 @@ export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType
     })
 
     return [...filtered].sort((a, b) => {
-      let dateA, dateB
+      let dateA: Date, dateB: Date
 
       if (sortBy.includes('created')) {
         dateA = new Date(a.created)
@@ -22,8 +23,8 @@ export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType
       }
 
       return sortBy.endsWith('asc')
-        ? dateA - dateB
-        : dateB - dateA
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime()
     })
   }, [tasks, filter, sortBy])
 }

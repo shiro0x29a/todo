@@ -1,5 +1,20 @@
 import { z } from "zod"
 
+export const SortTypeSchema = z.enum([
+  'created-desc',
+  'created-asc',
+  'edited-desc',
+  'edited-asc'
+])
+export type SortType = z.infer<typeof SortTypeSchema>
+
+export const FilterTypeSchema = z.enum([
+  'all',
+  'completed',
+  'uncompleted'
+])
+export type FilterType = z.infer<typeof FilterTypeSchema>
+
 export const TaskSchema = z.object({
   id: z.number(),
   text: z.string(),

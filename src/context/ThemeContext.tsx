@@ -1,6 +1,12 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode, Dispatch, SetStateAction } from 'react'
 
-const ThemeContext = createContext(null)
+interface ThemeContextType {
+  theme: string
+  setTheme: Dispatch<SetStateAction<string>>
+  toggleTheme: () => void
+}
+
+const ThemeContext = createContext<ThemeContextType | null>(null)
 
 function getSystemTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -18,7 +24,7 @@ export function useTheme() {
   return context
 }
 
-export default function ThemeProvider({ children }) {
+export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'system'
   })
@@ -32,7 +38,7 @@ export default function ThemeProvider({ children }) {
 
     const media = window.matchMedia('(prefers-color-scheme: dark)')
 
-    const handler = (e) => {
+    const handler = (e: MediaQueryListEvent) => {
       setSystemTheme(e.matches ? 'dark' : 'light')
     }
 

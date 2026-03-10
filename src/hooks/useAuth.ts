@@ -10,9 +10,9 @@ export function useLogin() {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authService.login(email, password),
-    onSuccess: (user: AccessToken) => {
-      localStorage.setItem('token', user.token ?? '')
-      setUser(user)
+    onSuccess: (data: AccessToken) => {
+      localStorage.setItem('token', data.token ?? '')
+      setUser({ email: data.email, filter: 'all', sortBy: 'created-desc' })
     },
     onError: (err: any) => {
       console.error(err)
@@ -26,9 +26,9 @@ export function useRegister() {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authService.register(email, password),
-    onSuccess: (user: AccessToken) => {
-      localStorage.setItem('token', user.token ?? '')
-      setUser(user)
+    onSuccess: (data: AccessToken) => {
+      localStorage.setItem('token', data.token ?? '')
+      setUser({ email: data.email, filter: 'all', sortBy: 'created-desc' })
     },
     onError: (err: any) => {
       console.error(err)

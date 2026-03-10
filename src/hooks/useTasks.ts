@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { todoService } from '../services/todo'
 import { Task } from '../schemas/todo'
 
-export const todoKeys = {
+const todoKeys = {
   all: ['tasks'] as const,
   detail: (id: Task['id']) => ['tasks', id] as const,
 }
