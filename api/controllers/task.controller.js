@@ -20,6 +20,17 @@ exports.updateTask = async (req, res) => {
   res.json(task)
 }
 
+exports.reorderTask = async (req, res) => {
+  const { id } = req.params
+  const { order } = req.body
+  if (order === undefined || order === null) {
+    return res.status(400).json({ message: 'Order required' })
+  }
+  const task = await Task.reorder(req.user.email, id, order)
+  if (!task) return res.status(404).json({ message: 'Task not found' })
+  res.json(task)
+}
+
 exports.deleteTask = async (req, res) => {
   const { id } = req.params
   const task = await Task.delete(req.user.email, id)

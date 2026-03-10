@@ -11,6 +11,13 @@ export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType
       return true
     })
 
+    // Если у задач есть order, сортируем по нему (больше order = выше в списке)
+    const hasOrder = filtered.some(t => t.order !== undefined && t.order !== null)
+    
+    if (hasOrder) {
+      return [...filtered].sort((a, b) => (b.order || 0) - (a.order || 0))
+    }
+
     return [...filtered].sort((a, b) => {
       let dateA: Date, dateB: Date
 

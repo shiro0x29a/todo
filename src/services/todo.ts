@@ -26,6 +26,11 @@ export const todoService = {
     return TaskSchema.parse(data)
   },
 
+  async reorderTask(id: number, order: number): Promise<Task> {
+    const data = await api.put(`/tasks/${id}/reorder`, { order })
+    return TaskSchema.parse(data)
+  },
+
   async deleteTask(id: number) {
     return api.delete(`/tasks/${id}`)
   }

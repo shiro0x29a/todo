@@ -20,7 +20,8 @@ export const TaskSchema = z.object({
   text: z.string(),
   isCompleted: z.boolean(),
   createdAt: z.string(),
-  editedAt: z.string().nullable()
+  editedAt: z.string().nullable(),
+  order: z.number()
 })
 
 export const TasksSchema = z.array(TaskSchema)

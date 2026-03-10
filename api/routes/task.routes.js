@@ -5,6 +5,7 @@ const authMiddleware = require('../middleware/auth')
 router.get('/tasks', authMiddleware, ctrl.getTasks)
 router.post('/tasks', authMiddleware, ctrl.createTask)
 router.put('/tasks/:id', authMiddleware, ctrl.updateTask)
+router.put('/tasks/:id/reorder', authMiddleware, ctrl.reorderTask)
 router.delete('/tasks/:id', authMiddleware, ctrl.deleteTask)
 
 module.exports = router

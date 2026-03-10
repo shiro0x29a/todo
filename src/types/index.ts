@@ -12,6 +12,7 @@ export interface Task {
   isCompleted: boolean
   createdAt: number
   editedAt?: number
+  order?: number
 }
 
 export type SortType = 'created-desc' | 'created-asc' | 'edited-desc' | 'edited-asc'

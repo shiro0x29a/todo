@@ -69,6 +69,26 @@ export function useEditTask() {
   })
 }
 
+export function useReorderTask() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      order,
+    }: {
+      id: number
+      order: number
+    }) => todoService.reorderTask(id, order),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: todoKeys.all,
+      })
+    },
+  })
+}
+
 export function useDeleteTask() {
   const queryClient = useQueryClient()
 

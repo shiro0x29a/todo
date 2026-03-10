@@ -4,6 +4,8 @@ import { useTranslation } from '../hooks/useTranslation'
 import { Task } from '../types'
 import { useTodoStore } from '../store/todo'
 import { useToggleTask, useEditTask } from '../hooks/useTasks'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 interface TaskItemProps {
   task: Task
@@ -14,6 +16,23 @@ export default function TaskItem({ task }: TaskItemProps) {
   const toggleTask = useToggleTask()
   const editTask = useEditTask()
   const openDeletePopup = useTodoStore((s) => s.openDeletePopup)
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    position: 'relative' as const,
+    zIndex: isDragging ? 1000 : 'auto',
+  }
 
   const handleToggle = () => {
     toggleTask.mutate({
@@ -33,8 +52,20 @@ export default function TaskItem({ task }: TaskItemProps) {
   }
 
   return (
-    <div className={`${styles.task} ${task.isCompleted ? styles.completed : ''}`}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`${styles.task} ${task.isCompleted ? styles.completed : ''} ${isDragging ? styles.dragging : ''}`}
+    >
       <div className={styles.taskWrap}>
+        <div
+          className={styles.dragHandle}
+          {...attributes}
+          {...listeners}
+        >
+          <i className="fa-solid fa-grip-vertical"></i>
+        </div>
+
         <input
           className={styles.checkbox}
           type="checkbox"
