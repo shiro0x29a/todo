@@ -62,9 +62,9 @@ export default function TaskItem({ task }: TaskItemProps) {
       </div>
 
       <div className={styles.timeStamp}>
-        {task.edited
-          ? `${t('todo.edited')}: ${task.edited}`
-          : `${t('todo.created')}: ${task.created}`}
+        {task.editedAt
+          ? `${t('todo.editedAt')}: ${task.editedAt}`
+          : `${t('todo.createdAt')}: ${task.createdAt}`}
       </div>
     </div>
   )

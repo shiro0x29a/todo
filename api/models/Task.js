@@ -6,8 +6,8 @@ class Task {
       id: row.id,
       text: row.text,
       isCompleted: row.is_completed,
-      created: row.created_at,
-      edited: row.edited_at
+      createdAt: row.created_at,
+      editedAt: row.edited_at
     };
   }
 

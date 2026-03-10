@@ -37,7 +37,7 @@ export function useToggleTask() {
       id,
       isCompleted,
     }: {
-      id: string
+      id: number
       isCompleted: boolean
     }) => todoService.toggleTask(id, isCompleted),
 
@@ -57,7 +57,7 @@ export function useEditTask() {
       id,
       text,
     }: {
-      id: string
+      id: number
       text: string
     }) => todoService.editTask(id, text),
 
@@ -73,7 +73,7 @@ export function useDeleteTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => todoService.deleteTask(id),
+    mutationFn: (id: number) => todoService.deleteTask(id),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

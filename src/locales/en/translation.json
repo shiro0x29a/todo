@@ -16,8 +16,8 @@
     "only-completed": "Only completed",
     "only-uncompleted": "Only uncompleted",
 
-    "edited": "Edited",
-    "created": "Created",
+    "editedAt": "Edited",
+    "createdAt": "Created",
     "emptyList": "There are no tasks",
 
     "delete": "Delete",

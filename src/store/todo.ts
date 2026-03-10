@@ -9,14 +9,14 @@ interface TodoStore {
   filter: FilterType
   sortBy: SortType
 
-  selectedTask: string | null
+  selectedTask: number | null
   showPopup: boolean
 
   setFilter: (f: FilterType) => void
   setSortBy: (s: SortType) => void
   setPage: (p: number) => void
 
-  openDeletePopup: (id: string) => void
+  openDeletePopup: (id: number) => void
   closeDeletePopup: () => void
 
   currentPage: number

@@ -15,11 +15,11 @@ export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType
       let dateA: Date, dateB: Date
 
       if (sortBy.includes('created')) {
-        dateA = new Date(a.created)
-        dateB = new Date(b.created)
+        dateA = new Date(a.createdAt)
+        dateB = new Date(b.createdAt)
       } else {
-        dateA = a.edited ? new Date(a.edited) : new Date(a.created)
-        dateB = b.edited ? new Date(b.edited) : new Date(b.created)
+        dateA = a.editedAt ? new Date(a.editedAt) : new Date(a.createdAt)
+        dateB = b.editedAt ? new Date(b.editedAt) : new Date(b.createdAt)
       }
 
       return sortBy.endsWith('asc')

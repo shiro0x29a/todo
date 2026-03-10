@@ -7,11 +7,11 @@ import {
 
 
 export interface Task {
-  id: string
+  id: number
   text: string
   isCompleted: boolean
-  created: number
-  edited?: number
+  createdAt: number
+  editedAt?: number
 }
 
 export type SortType = 'created-desc' | 'created-asc' | 'edited-desc' | 'edited-asc'
@@ -33,9 +33,9 @@ export interface ITodoContext {
   setSortBy: Dispatch<SetStateAction<SortType>>
 
   tasks: Task[]
-  taskToggle: (id: string) => void
-  handleEdit: (id: string, newText: string) => void
-  handleDeleteClick: (id: string) => void
+  taskToggle: (id: number) => void
+  handleEdit: (id: number, newText: string) => void
+  handleDeleteClick: (id: number) => void
 
   currentPage: number
   totalPages: number

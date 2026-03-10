@@ -16,8 +16,8 @@
     "only-completed": "Завершённые",
     "only-uncompleted": "Незавершённые",
 
-    "edited": "Редактировано",
-    "created": "Создано",
+    "editedAt": "Редактировано",
+    "createdAt": "Создано",
     "emptyList": "Задач пока нет.",
 
     "delete": "Удалить",

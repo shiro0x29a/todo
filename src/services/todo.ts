@@ -13,7 +13,7 @@ export const todoService = {
     return TaskSchema.parse(data)
   },
 
-  async toggleTask(id: string, isCompleted: boolean): Promise<Task> {
+  async toggleTask(id: number, isCompleted: boolean): Promise<Task> {
     const data = await api.put(`/tasks/${id}`, {
       isCompleted
     })
@@ -21,12 +21,12 @@ export const todoService = {
     return TaskSchema.parse(data)
   },
 
-  async editTask(id: string, text: string): Promise<Task> {
+  async editTask(id: number, text: string): Promise<Task> {
     const data = await api.put(`/tasks/${id}`, { text })
     return TaskSchema.parse(data)
   },
 
-  async deleteTask(id: string) {
+  async deleteTask(id: number) {
     return api.delete(`/tasks/${id}`)
   }
 }
