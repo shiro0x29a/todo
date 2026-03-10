@@ -6,16 +6,23 @@ import { useTodoStore } from '../store/todo'
 import { useToggleTask, useEditTask } from '../hooks/useTasks'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { getTagColor } from '../utils/tagColor'
+import { useState } from 'react'
 
 interface TaskItemProps {
   task: Task
 }
+
+const MAX_TAGS = 10
 
 export default function TaskItem({ task }: TaskItemProps) {
   const { t } = useTranslation()
   const toggleTask = useToggleTask()
   const editTask = useEditTask()
   const openDeletePopup = useTodoStore((s) => s.openDeletePopup)
+  
+  const [showTagInput, setShowTagInput] = useState(false)
+  const [newTag, setNewTag] = useState('')
 
   const {
     attributes,
@@ -50,6 +57,47 @@ export default function TaskItem({ task }: TaskItemProps) {
       text,
     })
   }
+
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && newTag.trim()) {
+      e.preventDefault()
+      const tags = task.tags || []
+      if (tags.length >= MAX_TAGS) return
+      
+      editTask.mutate({
+        id: task.id,
+        text: task.text,
+        tags: [...tags, newTag.trim()],
+      })
+      setNewTag('')
+      setShowTagInput(false)
+    } else if (e.key === 'Escape') {
+      setShowTagInput(false)
+      setNewTag('')
+    }
+  }
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    const tags = (task.tags || []).filter(tag => tag !== tagToRemove)
+    editTask.mutate({
+      id: task.id,
+      text: task.text,
+      tags,
+    })
+  }
+
+  const formatDate = (timestamp: number | string) => {
+    const date = new Date(timestamp)
+    return date.toLocaleString('ru-RU', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
+  const tags = task.tags || []
 
   return (
     <div
@@ -92,10 +140,59 @@ export default function TaskItem({ task }: TaskItemProps) {
         </div>
       </div>
 
+      <div className={styles.tags}>
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className={styles.tag}
+            style={{ backgroundColor: getTagColor(tag) }}
+          >
+            <span className={styles.tagName}>{tag}</span>
+            <button
+              className={styles.tagRemove}
+              onClick={() => handleRemoveTag(tag)}
+              aria-label="Удалить тег"
+            >
+              ×
+            </button>
+          </span>
+        ))}
+
+        {tags.length < MAX_TAGS ? (
+          showTagInput ? (
+            <input
+              type="text"
+              className={styles.tagInput}
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyDown={handleAddTag}
+              onBlur={() => {
+                setShowTagInput(false)
+                setNewTag('')
+              }}
+              autoFocus
+              placeholder={t('todo.addTag')}
+            />
+          ) : (
+            <button
+              className={styles.addTagBtn}
+              onClick={() => setShowTagInput(true)}
+              title={t('todo.addTag')}
+            >
+              +
+            </button>
+          )
+        ) : null}
+      </div>
+
+      {tags.length >= MAX_TAGS && (
+        <span className={styles.maxTags}>Максимум 10 тегов</span>
+      )}
+
       <div className={styles.timeStamp}>
         {task.editedAt
-          ? `${t('todo.editedAt')}: ${task.editedAt}`
-          : `${t('todo.createdAt')}: ${task.createdAt}`}
+          ? `${t('todo.editedAt')}: ${formatDate(task.editedAt)}`
+          : `${t('todo.createdAt')}: ${formatDate(task.createdAt)}`}
       </div>
     </div>
   )

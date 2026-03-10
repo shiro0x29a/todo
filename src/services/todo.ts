@@ -21,8 +21,8 @@ export const todoService = {
     return TaskSchema.parse(data)
   },
 
-  async editTask(id: number, text: string): Promise<Task> {
-    const data = await api.put(`/tasks/${id}`, { text })
+  async editTask(id: number, text: string, tags?: string[]): Promise<Task> {
+    const data = await api.put(`/tasks/${id}`, { text, tags })
     return TaskSchema.parse(data)
   },
 

@@ -58,12 +58,17 @@ async function createTables() {
       is_completed BOOLEAN NOT NULL DEFAULT FALSE,
       created_at TIMESTAMP NOT NULL DEFAULT NOW(),
       edited_at TIMESTAMP,
-      "order" INTEGER NOT NULL DEFAULT 0
+      "order" INTEGER NOT NULL DEFAULT 0,
+      tags TEXT[] DEFAULT '{}'
     )
   `);
 
   await pool.query(`
     ALTER TABLE tasks ADD COLUMN IF NOT EXISTS "order" INTEGER NOT NULL DEFAULT 0
+  `);
+
+  await pool.query(`
+    ALTER TABLE tasks ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}'
   `);
 
   console.log('Tables created/checked');

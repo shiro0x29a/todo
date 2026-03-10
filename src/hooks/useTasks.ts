@@ -56,10 +56,12 @@ export function useEditTask() {
     mutationFn: ({
       id,
       text,
+      tags,
     }: {
       id: number
       text: string
-    }) => todoService.editTask(id, text),
+      tags?: string[]
+    }) => todoService.editTask(id, text, tags),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

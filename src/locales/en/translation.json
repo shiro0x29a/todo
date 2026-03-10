@@ -5,6 +5,7 @@
   "todo": {
     "placeholder": "Enter task description...",
     "addTask": "Add task",
+    "addTag": "Add tag",
     "askDelete": "Are you sure you want to delete the task?",
 
     "newest": "Newest",
@@ -16,8 +17,8 @@
     "only-completed": "Only completed",
     "only-uncompleted": "Only uncompleted",
 
-    "editedAt": "Edited",
-    "createdAt": "Created",
+    "editedAt": "edited at",
+    "createdAt": "created at",
     "emptyList": "There are no tasks",
 
     "delete": "Delete",

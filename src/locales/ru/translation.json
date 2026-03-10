@@ -5,6 +5,7 @@
   "todo": {
     "placeholder": "Введите задачу...",
     "addTask": "Добавить",
+    "addTag": "Добавить тег",
     "askDelete": "Вы точно хотите удалить задачу?",
 
     "newest": "Новые",
@@ -16,8 +17,8 @@
     "only-completed": "Завершённые",
     "only-uncompleted": "Незавершённые",
 
-    "editedAt": "Редактировано",
-    "createdAt": "Создано",
+    "editedAt": "ред.",
+    "createdAt": "созд.",
     "emptyList": "Задач пока нет.",
 
     "delete": "Удалить",

@@ -13,6 +13,7 @@ export interface Task {
   createdAt: number
   editedAt?: number
   order?: number
+  tags?: string[]
 }
 
 export type SortType = 'created-desc' | 'created-asc' | 'edited-desc' | 'edited-asc'

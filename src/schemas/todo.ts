@@ -21,7 +21,8 @@ export const TaskSchema = z.object({
   isCompleted: z.boolean(),
   createdAt: z.string(),
   editedAt: z.string().nullable(),
-  order: z.number()
+  order: z.number(),
+  tags: z.array(z.string()).optional().default([])
 })
 
 export const TasksSchema = z.array(TaskSchema)

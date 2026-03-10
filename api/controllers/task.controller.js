@@ -14,8 +14,8 @@ exports.createTask = async (req, res) => {
 
 exports.updateTask = async (req, res) => {
   const { id } = req.params
-  const { text, isCompleted } = req.body
-  const task = await Task.update(req.user.email, id, text, isCompleted)
+  const { text, isCompleted, tags } = req.body
+  const task = await Task.update(req.user.email, id, text, isCompleted, tags)
   if (!task) return res.status(404).json({ message: 'Task not found' })
   res.json(task)
 }
