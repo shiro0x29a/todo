@@ -1,4 +1,4 @@
-import styles from '../styles/TaskList.module.css'
+import styles from '../styles/TaskItem.module.css'
 import { useTranslation } from '../hooks/useTranslation'
 
 import { Task } from '../types'
