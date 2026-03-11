@@ -9,6 +9,8 @@ interface TodoStore {
   filter: FilterType
   sortBy: SortType
   tagFilter: string[]
+  searchQuery: string
+  setSearchQuery: (query: string) => void
   setTagFilter: (tags: string[]) => void
 
   selectedTask: number | null
@@ -35,6 +37,9 @@ export const useTodoStore = create<TodoStore>((set) => ({
   filter: "all",
   sortBy: "created-desc",
   tagFilter: [],
+  searchQuery: "",
+  setSearchQuery: (query) =>
+    set({ searchQuery: query, currentPage: 1 }),
   setTagFilter: (tags) =>
     set({ tagFilter: tags, currentPage: 1 }),
 

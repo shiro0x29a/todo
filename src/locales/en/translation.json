@@ -6,6 +6,7 @@
     "placeholder": "Enter task description...",
     "addTask": "Add task",
     "addTag": "Add tag",
+    "search": "Search tasks or #tags...",
     "askDelete": "Are you sure you want to delete the task?",
 
     "newest": "Newest",
@@ -22,6 +23,7 @@
     "emptyList": "There are no tasks",
     "filterByTags": "Filter by tags",
     "clear": "Clear",
+    "showAll": "Show all",
 
     "delete": "Delete",
     "edit": "Edit",

@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Task } from '../schemas/todo'
 import { FilterType, SortType } from '../types'
 
-export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType, tagFilter: string[] = []) {
+export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType, tagFilter: string[] = [], searchQuery: string = '') {
   return useMemo(() => {
     let filtered = tasks.filter(task => {
       if (filter === 'completed') return task.isCompleted
@@ -16,6 +16,24 @@ export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType
       filtered = filtered.filter(task => {
         const taskTags = task.tags || []
         return tagFilter.every(tag => taskTags.includes(tag))
+      })
+    }
+
+    // Поиск по тексту задачи
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim()
+      
+      // Разбиваем запрос на части: #теги и обычный текст
+      const tagQueries = query.match(/#\w+/g)?.map(t => t.slice(1)) || []
+      const textQuery = query.replace(/#\w+/g, '').trim()
+      
+      filtered = filtered.filter(task => {
+        const textMatch = !textQuery || task.text.toLowerCase().includes(textQuery)
+        const taskTags = (task.tags || []).map(t => t.toLowerCase())
+        const tagMatch = tagQueries.length === 0 || tagQueries.every(tag => 
+          taskTags.some(taskTag => taskTag.includes(tag))
+        )
+        return textMatch && tagMatch
       })
     }
 
@@ -41,5 +59,5 @@ export function useSortTasks(tasks: Task[], filter: FilterType, sortBy: SortType
         ? dateA.getTime() - dateB.getTime()
         : dateB.getTime() - dateA.getTime()
     })
-  }, [tasks, filter, sortBy, tagFilter])
+  }, [tasks, filter, sortBy, tagFilter, searchQuery])
 }

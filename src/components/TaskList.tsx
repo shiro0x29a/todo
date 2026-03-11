@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import styles from '../styles/TaskList.module.css'
 import { useTranslation } from '../hooks/useTranslation'
@@ -23,8 +23,10 @@ export default function TaskList() {
   const filter = useTodoStore((s) => s.filter)
   const sortBy = useTodoStore((s) => s.sortBy)
   const tagFilter = useTodoStore((s) => s.tagFilter)
+  const searchQuery = useTodoStore((s) => s.searchQuery)
   const setTagFilter = useTodoStore((s) => s.setTagFilter)
-  const filteredTasks = useSortTasks(tasks, filter, sortBy, tagFilter)
+  const setSearchQuery = useTodoStore((s) => s.setSearchQuery)
+  const filteredTasks = useSortTasks(tasks, filter, sortBy, tagFilter, searchQuery)
 
   // Получаем все уникальные теги из задач
   const allTags = Array.from(new Set(tasks.flatMap(task => task.tags || [])))
@@ -46,7 +48,27 @@ export default function TaskList() {
 
   const clearTagFilter = () => {
     setTagFilter([])
+    setShowOnlyActiveTags(false)
   }
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.startsWith('#')) {
+      e.preventDefault()
+      const tagName = searchQuery.slice(1).trim()
+      if (tagName && allTags.includes(tagName) && !tagFilter.includes(tagName)) {
+        setTagFilter([...tagFilter, tagName])
+      }
+      setSearchQuery('')
+    }
+  }
+
+  const [showSearch, setShowSearch] = useState(false)
+  const [showOnlyActiveTags, setShowOnlyActiveTags] = useState(true)
+
+  // Показываем только активные теги или все
+  const displayedTags = showOnlyActiveTags && tagFilter.length > 0
+    ? allTags.filter(tag => tagFilter.includes(tag))
+    : allTags
 
   useEffect(() => {
     if (!user) return
@@ -90,26 +112,67 @@ export default function TaskList() {
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <SortableContext items={sortedByOrder.map((t) => t.id)} strategy={verticalListSortingStrategy}>
         <div className={styles.taskList}>
-          {allTags.length > 0 && (
-            <div className={styles.tagFilter}>
-              <div className={styles.tagFilterList}>
-                {allTags.map((tag) => (
-                  <button
-                    key={tag}
-                    className={`${styles.tagFilterBtn} ${tagFilter.includes(tag) ? styles.active : ''}`}
-                    onClick={() => handleTagFilterToggle(tag)}
-                  >
-                    {tag}
-                  </button>
-                ))}
-                {tagFilter.length > 0 && (
-                  <button className={styles.clearTagFilter} onClick={clearTagFilter}>
-                    {t('todo.clear')}
-                  </button>
-                )}
+          <div className={styles.searchBar}>
+            {displayedTags.length > 0 && (
+              <div className={styles.tagFilter}>
+                <div className={styles.tagFilterList}>
+                  {displayedTags.map((tag) => (
+                    <button
+                      key={tag}
+                      className={`${styles.tagFilterBtn} ${tagFilter.includes(tag) ? styles.active : ''}`}
+                      onClick={() => handleTagFilterToggle(tag)}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                  {showOnlyActiveTags && tagFilter.length > 0 && (
+                    <button
+                      className={styles.showAllTags}
+                      onClick={() => setShowOnlyActiveTags(false)}
+                    >
+                      {t('todo.showAll')}
+                    </button>
+                  )}
+                  {!showOnlyActiveTags && tagFilter.length > 0 && tagFilter.length < allTags.length && (
+                    <button
+                      className={styles.showMoreTags}
+                      onClick={() => setShowOnlyActiveTags(true)}
+                    >
+                      +{allTags.length - tagFilter.length}
+                    </button>
+                  )}
+                  {tagFilter.length > 0 && (
+                    <button className={styles.clearTagFilter} onClick={clearTagFilter} title={t('todo.clear')}>
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {showSearch ? (
+              <input
+                type="text"
+                className={styles.searchInput}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                placeholder={t('todo.search')}
+                autoFocus
+                onBlur={() => {
+                  if (!searchQuery) setShowSearch(false)
+                }}
+              />
+            ) : (
+              <button
+                className={styles.searchIconBtn}
+                onClick={() => setShowSearch(true)}
+                title={t('todo.search')}
+              >
+                <i className="fa-solid fa-magnifying-glass"></i>
+              </button>
+            )}
+          </div>
 
           {sortedByOrder.length ? (
             sortedByOrder.map((task) => <TaskItem key={task.id} task={task} />)
