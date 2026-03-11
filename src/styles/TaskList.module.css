@@ -71,7 +71,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 10px;
   align-items: center;
 }
 
@@ -158,5 +157,57 @@
   font-size: 12px;
   color: #999;
   display: block;
+}
+
+.tagFilter {
+  margin-bottom: 3px;
+}
+
+.tagFilterList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 0 15px;
+}
+
+.tagFilterBtn {
+  background: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 5px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.2s;
+}
+
+.tagFilterBtn:hover {
+  background: #333;
+  border-color: #333;
+}
+
+.tagFilterBtn.active {
+  background: #52CC7A;
+  border-color: #52CC7A;
+  color: #fff;
+}
+
+.tagFilterBtn.active:hover {
+  background: #40b865;
+}
+
+.clearTagFilter {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #000;
+  font-size: 12px;
+  padding: 2px 5px;
+  margin-left: 5px;
+}
+
+.clearTagFilter:hover {
+  color: #666;
 }
 

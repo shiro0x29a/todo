@@ -20,6 +20,8 @@
     "editedAt": "ред.",
     "createdAt": "созд.",
     "emptyList": "Задач пока нет.",
+    "filterByTags": "Фильтр по тегам",
+    "clear": "Очистить",
 
     "delete": "Удалить",
     "edit": "Редактировать",

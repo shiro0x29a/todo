@@ -20,6 +20,8 @@
     "editedAt": "edited at",
     "createdAt": "created at",
     "emptyList": "There are no tasks",
+    "filterByTags": "Filter by tags",
+    "clear": "Clear",
 
     "delete": "Delete",
     "edit": "Edit",

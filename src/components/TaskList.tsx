@@ -22,7 +22,12 @@ export default function TaskList() {
 
   const filter = useTodoStore((s) => s.filter)
   const sortBy = useTodoStore((s) => s.sortBy)
-  const filteredTasks = useSortTasks(tasks, filter, sortBy)
+  const tagFilter = useTodoStore((s) => s.tagFilter)
+  const setTagFilter = useTodoStore((s) => s.setTagFilter)
+  const filteredTasks = useSortTasks(tasks, filter, sortBy, tagFilter)
+
+  // Получаем все уникальные теги из задач
+  const allTags = Array.from(new Set(tasks.flatMap(task => task.tags || [])))
 
   const tasksPerPage = 5
   const { itemsForPage: tasksForPage } = usePagination(filteredTasks, tasksPerPage)
@@ -30,6 +35,18 @@ export default function TaskList() {
   const setSortBy = useTodoStore((s) => s.setSortBy)
   const setFilter = useTodoStore((s) => s.setFilter)
   const reorderTask = useReorderTask()
+
+  const handleTagFilterToggle = (tag: string) => {
+    if (tagFilter.includes(tag)) {
+      setTagFilter(tagFilter.filter(t => t !== tag))
+    } else {
+      setTagFilter([...tagFilter, tag])
+    }
+  }
+
+  const clearTagFilter = () => {
+    setTagFilter([])
+  }
 
   useEffect(() => {
     if (!user) return
@@ -73,6 +90,27 @@ export default function TaskList() {
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <SortableContext items={sortedByOrder.map((t) => t.id)} strategy={verticalListSortingStrategy}>
         <div className={styles.taskList}>
+          {allTags.length > 0 && (
+            <div className={styles.tagFilter}>
+              <div className={styles.tagFilterList}>
+                {allTags.map((tag) => (
+                  <button
+                    key={tag}
+                    className={`${styles.tagFilterBtn} ${tagFilter.includes(tag) ? styles.active : ''}`}
+                    onClick={() => handleTagFilterToggle(tag)}
+                  >
+                    {tag}
+                  </button>
+                ))}
+                {tagFilter.length > 0 && (
+                  <button className={styles.clearTagFilter} onClick={clearTagFilter}>
+                    {t('todo.clear')}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           {sortedByOrder.length ? (
             sortedByOrder.map((task) => <TaskItem key={task.id} task={task} />)
           ) : (

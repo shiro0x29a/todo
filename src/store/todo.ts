@@ -8,6 +8,8 @@ interface TodoStore {
 
   filter: FilterType
   sortBy: SortType
+  tagFilter: string[]
+  setTagFilter: (tags: string[]) => void
 
   selectedTask: number | null
   showPopup: boolean
@@ -32,6 +34,9 @@ export const useTodoStore = create<TodoStore>((set) => ({
 
   filter: "all",
   sortBy: "created-desc",
+  tagFilter: [],
+  setTagFilter: (tags) =>
+    set({ tagFilter: tags, currentPage: 1 }),
 
   selectedTask: null,
   showPopup: false,
